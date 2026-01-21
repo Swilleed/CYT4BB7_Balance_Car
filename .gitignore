@@ -60,7 +60,7 @@ Thumbs.db
 desktop.ini
 
 # IDE特定文件
-.vscode/iar-vsc.json
+.vscode/
 *.code-workspace
 *.suo
 *.user
@@ -90,6 +90,10 @@ desktop.ini
 !project/iar/cyt4bb7.eww
 !project/iar/icf/linker_directives_tviibh.icf
 !project/iar/project_config/
+!project/iar/project_config/*.ewp
+!project/iar/project_config/*.ewd
+!project/iar/project_config/*.ewt
+!project/iar/project_config/*.eww
 
 # 排除一些特定的生成文件
 project/iar/project_config/settings/
