@@ -1,0 +1,120 @@
+# IAR工作区/工程文件（选择性保留）
+# 主工作区文件需要保留，其他生成的忽略
+*.ewp
+*.ewd
+*.ewt
+*.ewx
+*.crun
+*.dbgdt
+*.dnx
+*.sim
+*.wsdt
+*.cspy.bat
+*.cspy.ps1
+*.driver.xcl
+*.general.xcl
+
+# IAR构建输出
+*.out
+*.hex
+*.bin
+*.elf
+*.map
+*.lst
+*.dep
+*.pbi
+*.pbd
+*.pbw
+*.xcl
+*.pbd.browse
+*.pbw
+
+# 编译中间文件
+*.o
+*.obj
+*.d
+*.sbr
+*.bsc
+
+# 构建系统文件
+.ninja_deps
+.ninja_log
+build.ninja
+.cyt4bb7_cm_7_0_build_cache
+
+# 调试文件
+*.jdebug
+*.d43
+
+# 临时文件
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+*.__i
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE特定文件
+.vscode/iar-vsc.json
+*.code-workspace
+*.suo
+*.user
+*.sdf
+*.opensdf
+*.ncb
+
+# 备份文件
+*.bak
+*.backup
+
+# 库文件（除了特定的静态库）
+*.lib
+*.so
+*.dll
+*.exe
+
+# 日志文件
+*.log
+
+# 项目特定文件
+删除临时文件IAR.bat
+本文件夹作用.txt
+外设文件说明.txt
+
+# 保留特定的文件（用!取消忽略）
+!project/iar/cyt4bb7.eww
+!project/iar/icf/linker_directives_tviibh.icf
+!project/iar/project_config/
+
+# 排除一些特定的生成文件
+project/iar/project_config/settings/
+project/iar/Debug_m7_0/
+project/iar/Debug_m7_1/
+project/iar/project_config/Debug_m7_0/
+project/iar/project_config/Debug_m7_1/
+
+# 保留文档和许可证文件
+!**/LICENSE.txt
+!**/license.txt
+!**/GPL3_permission_statement.txt
+!**/version.txt
+!**/Readme.txt
+!**/ReadMe.txt
+!**/readme.txt
+
+# 保留所有源代码文件（确保不会被忽略）
+!**/*.c
+!**/*.h
+!**/*.s
+!**/*.S
+!**/*.asm
+!**/*.icf
+!**/*.json
+!**/*.xml
+!**/*.a  # 静态库文件需要保留
+!**/*.config
