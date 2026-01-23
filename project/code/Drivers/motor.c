@@ -8,10 +8,10 @@ Motor_TypeDef motorRight;
 /**
  * 初始化电机结构体及其PID参数
  */
-void Motor_Init(void)
+void Motor_Init(float kp, float ki, float kd)
 {
-    PID_Init(&motorLeft.pid, 1.0f, 0.1f, 0.01f);
-    PID_Init(&motorRight.pid, 1.0f, 0.1f, 0.01f);
+    PID_Init(&motorLeft.pid, kp, ki, kd);
+    PID_Init(&motorRight.pid, kp, ki, kd);
 
     motorLeft.speed = 0.0f;
     motorLeft.targetSpeed = 0.0f;
@@ -20,6 +20,7 @@ void Motor_Init(void)
     motorLeft.direction = 0;
     motorLeft.pwmChannel = MOTOR_LEFT_PWM_CHANNEL;
     motorLeft.encoderChannel = (uint8_t)MOTOR_LEFT_ENCODER_INDEX;
+    motorLeft.directionPin = MOTOR_LEFT_DIR_PIN;
     motorRight.speed = 0.0f;
     motorRight.targetSpeed = 0.0f;
     motorRight.encoderCount = 0;
@@ -27,6 +28,7 @@ void Motor_Init(void)
     motorRight.direction = 0;
     motorRight.pwmChannel = MOTOR_RIGHT_PWM_CHANNEL;
     motorRight.encoderChannel = (uint8_t)MOTOR_RIGHT_ENCODER_INDEX;
+    motorRight.directionPin = MOTOR_RIGHT_DIR_PIN;
 }
 
 /**
@@ -60,6 +62,14 @@ void Motor_SetDuty(Motor_TypeDef *motor, float duty)
         motor->direction = 0;
     }
     pwm_set_duty(motor->pwmChannel, (uint32_t)(duty));
+    if (motor->direction == 1)
+    {
+        gpio_set_level((gpio_pin_enum)(motor->directionPin), 1);
+    }
+    else if (motor->direction == -1)
+    {
+        gpio_set_level((gpio_pin_enum)(motor->directionPin), 0);
+    }
 }
 
 /**

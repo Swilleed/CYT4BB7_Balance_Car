@@ -44,6 +44,7 @@ typedef struct
     uint8_t encoderChannel;
     int8_t direction;
     uint8_t pwmChannel;
+    uint8_t directionPin;
 } Motor_TypeDef;
 
 extern Motor_TypeDef motorLeft;
