@@ -34,94 +34,168 @@
 ********************************************************************************************************************/
 
 #include "zf_common_headfile.h"
-
+#include "KF.h"
+#include "Madgwick.h"
+#include "math.h"
 // 打开新的工程或者工程移动了位置务必执行以下操作
 // 第一步 关闭上面所有打开的文件
 // 第二步 project->clean  等待下方进度条走完
 
 // *************************** 例程硬件连接说明 ***************************
-// 核心板正常供电即可 无需额外连接
-// 如果使用主板测试 主板必须要用电池供电
-
+// 使用逐飞科技 CMSIS-DAP 调试下载器连接
+//      直接将下载器正确连接在核心板的调试下载接口即可
+// 使用 USB-TTL 模块连接
+//      模块管脚            单片机管脚
+//      USB-TTL-RX          查看 zf_common_debug.h 文件中 DEBUG_UART_TX_PIN 宏定义的引脚 默认 P00_0
+//      USB-TTL-TX          查看 zf_common_debug.h 文件中 DEBUG_UART_RX_PIN 宏定义的引脚 默认 P00_1
+//      USB-TTL-GND         核心板电源地 GND
+//      USB-TTL-3V3         核心板 3V3 电源
+// 接入 imu660ra
+//      模块管脚            单片机管脚
+//      SCL/SPC             查看 zf_device_imu660ra.h 中 imu660ra_SPC_PIN 宏定义 默认 P15_2
+//      SDA/DSI             查看 zf_device_imu660ra.h 中 imu660ra_SDI_PIN 宏定义 默认 P15_1
+//      SA0/SDO             查看 zf_device_imu660ra.h 中 imu660ra_SDO_PIN 宏定义 默认 P15_0
+//      CS                  查看 zf_device_imu660ra.h 中 imu660ra_CS_PIN  宏定义 默认 P15_3
+//      GND                 电源地 GND
+//      3V3                 电源 3V3
 
 // *************************** 例程测试说明 ***************************
-// 1.核心板烧录完成本例程，完成上电
-// 2.可以看到核心板上四个 LED 呈流水灯状闪烁
-// 3.将 SWITCH1 / SWITCH2 两个宏定义对应的引脚分别按照 00 01 10 11 的组合接到 1-VCC 0-GND 或者波动对应主板的拨码开关
-// 3.不同的组合下，四个 LED 流水灯状闪烁的频率会发生变化
-// 4.将 KEY1 / KEY2 / KEY3 / KEY4 两个宏定义对应的引脚接到 1-VCC 0-GND 或者 按对应按键
-// 5.任意引脚接 GND 或者 按键按下会使得所有LED一起闪烁 松开后恢复流水灯
+// 1.核心板烧录完成本例程，单独使用核心板与调试下载器或者 USB-TTL 模块，并连接好编码器，在断电情况下完成连接
+// 2.将调试下载器或者 USB-TTL 模块连接电脑 完成上电 正常 H2 LED 会闪烁
+// 3.电脑上使用 逐飞助手 打开对应的串口，串口波特率为 zf_common_debug.h 文件中 DEBUG_UART_BAUDRATE 宏定义 默认 115200，核心板按下复位按键
+// 4.可以在 逐飞助手 上看到如下串口信息：
+//      imu660ra acc data: x-..., y-..., z-...
+//      imu660ra gyro data: x-..., y-..., z-...
+// 5.移动旋转 imu660ra 就会看到数值变化
 // 如果发现现象与说明严重不符 请参照本文件最下方 例程常见问题说明 进行排查
 
 // **************************** 代码区域 ****************************
-#define LED1                    (P19_0)
+#define LED1                    (P19_0)                                         // SPI 串口 SPI 两寸屏 这里宏定义填写 IPS200_TYPE_SPI
 
-#define KEY1                    (P20_0)
-#define KEY2                    (P20_1)
-#define KEY3                    (P20_2)
-#define KEY4                    (P20_3)
+KalmanFilter1D X = {
+    .Angle_Hat = 0,  
+    .P = 1.0,     
+    .Q = 0.006,   
+    .R = 0.1     
+};
 
-#define SWITCH1                 (P21_5)
-#define SWITCH2                 (P21_6)
+KalmanFilter1D Y = {
+    .Angle_Hat = 0,  
+    .P = 1.0,     
+    .Q = 0.006,   
+    .R = 0.1    
+};
 
-uint16 delay_time = 0;
-uint8 led_state = 0;
+KalmanFilter1D Z = {
+    .Angle_Hat = 0,  
+    .P = 1.0,     
+    .Q = 0.006,   
+    .R = 0.1    
+};
+MadgwickFilter MF = {
+    .q0 = 1,
+    .q1 = 0,
+    .q2 = 0,
+    .q3 = 0
+};
+
+float Yaw,Pitch,Roll;
+float AX,AY,AZ,GX,GY,GZ;
+void Solve_Angle(void);
 
 int main(void)
 {
     clock_init(SYSTEM_CLOCK_250M); 	// 时钟配置及系统初始化<务必保留>
     debug_init();                          // 调试串口信息初始化
-    // 此处编写用户代码 例如外设初始化代码等
-
-    gpio_init(LED1, GPO, GPIO_LOW, GPO_PUSH_PULL);          // 初始化 LED1 输出 默认高电平 推挽输出模式
-
-    gpio_init(KEY1, GPI, GPIO_HIGH, GPI_PULL_UP);           // 初始化 KEY1 输入 默认高电平 上拉输入
-    gpio_init(KEY2, GPI, GPIO_HIGH, GPI_PULL_UP);           // 初始化 KEY2 输入 默认高电平 上拉输入
-    gpio_init(KEY3, GPI, GPIO_HIGH, GPI_PULL_UP);           // 初始化 KEY3 输入 默认高电平 上拉输入
-    gpio_init(KEY4, GPI, GPIO_HIGH, GPI_PULL_UP);           // 初始化 KEY4 输入 默认高电平 上拉输入
-
-    gpio_init(SWITCH1, GPI, GPIO_HIGH, GPI_PULL_UP);        // 初始化 SWITCH1 输入 默认高电平 上拉输入
-    gpio_init(SWITCH2, GPI, GPIO_HIGH, GPI_PULL_UP);        // 初始化 SWITCH2 输入 默认高电平 上拉输入
     
+    // 此处编写用户代码 例如外设初始化代码等
+    gpio_init(LED1, GPO, GPIO_HIGH, GPO_PUSH_PULL);                             // 初始化 LED1 输出 默认高电平 推挽输出模式
+
+    while(1)
+    {
+        if(imu660ra_init())
+        {
+           printf("\r\n imu660ra init error.");                                 // imu660ra 初始化失败
+        }
+        else
+        {
+           break;
+        }
+        gpio_toggle_level(LED1);                                                // 翻转 LED 引脚输出电平 控制 LED 亮灭 初始化出错这个灯会闪的很慢
+    }
+   
     
     // 此处编写用户代码 例如外设初始化代码等
     while(true)
     {
         // 此处编写需要循环执行的代码
-
-        if( !gpio_get_level(KEY1) || !gpio_get_level(KEY2) || !gpio_get_level(KEY3) || !gpio_get_level(KEY4) )         // 获取 KEYx 电平为低
-        {
-            delay_time = 500;
-        }
-        else
-        {
-            delay_time = 1000;
-        }
-        if(gpio_get_level(SWITCH1)) delay_time /= 2;
-        if(gpio_get_level(SWITCH2)) delay_time /= 2;
-        led_state = !led_state;
-        system_delay_ms(delay_time);
-        gpio_set_level(LED1, led_state);
+        imu660ra_get_acc();                                                     // 获取 imu660ra 的加速度测量数值
+        imu660ra_get_gyro();                                                    // 获取 imu660ra 的角速度测量数值
         
+        imu660ra_acc_x -= 64.33;
+        imu660ra_acc_y -= -48.37;
+        imu660ra_acc_z -= (-2018.22 - 2048);
+        imu660ra_gyro_x -= -2.59;
+        imu660ra_gyro_y -= -7.40;
+        imu660ra_gyro_z -= 2.60;
+        
+        
+        Solve_Angle();
+        
+        
+        
+        //printf("\r\nimu660ra acc data:  x=%5d, y=%5d, z=%5d\r\n", imu660ra_acc_x,  imu660ra_acc_y,  imu660ra_acc_z);
+        //printf("\r\nimu660ra gyro data: x=%5d, y=%5d, z=%5d\r\n", imu660ra_gyro_x, imu660ra_gyro_y, imu660ra_gyro_z);
+        printf("%.2f, %.2f, %.2f\r\n", Roll, Pitch, Yaw);
+        gpio_toggle_level(LED1);                                                // 翻转 LED 引脚输出电平 控制 LED 亮灭
+        system_delay_ms(1);
         // 此处编写需要循环执行的代码
     }
 }
 
-// **************************** 代码区域 ****************************
+void Solve_Angle(void)
+{
+  float dt = 0.00277;
+			
+  float dX = imu660ra_gyro_x / 32768.0  * 2000,dY = imu660ra_gyro_y / 32768.0  * 2000,dZ = imu660ra_gyro_z / 32768.0  * 2000;
+		
+  float gyro[3] = {dX * 3.14159 / 180,dY * 3.14159 / 180,dZ * 3.14159 / 180};
+			
+  float accel[3] = {imu660ra_acc_x * 9.8 / 2048 ,imu660ra_acc_y * 9.8 / 2048 ,imu660ra_acc_z * 9.8 / 2048};
+		
+  
+  if(fabs(GZ) <= 1){GZ = 0;}
+  
+  Madgwick_Update(&MF,gyro,accel,dt);
+  
+  Yaw = Madgwick_QuatToYaw(&MF) * 180 /3.14159;
+  Pitch = Madgwick_QuatToPitch(&MF) * 180 /3.14159;
+  Roll = Madgwick_QuatToRoll(&MF) * 180 /3.14159;
+		
+		
+  KalmanFilter1D_Update(&X,dX,Roll,dt);
+  KalmanFilter1D_Update(&Y,dY,Pitch,dt);
+  KalmanFilter1D_Update(&Z,dZ,Yaw,dt);
+  
+  
+  
+}
 
+
+
+// **************************** 代码区域 ****************************
 // *************************** 例程常见问题说明 ***************************
 // 遇到问题时请按照以下问题检查列表检查
-// 问题1：LED 不闪烁
-//      如果使用主板测试，主板必须要用电池供电
-//      查看程序是否正常烧录，是否下载报错，确认正常按下复位按键
-//      万用表测量对应 LED 引脚电压是否变化，如果不变化证明程序未运行，如果变化证明 LED 灯珠损坏
-// 问题2：SWITCH1 / SWITCH2 更改组合流水灯频率无变化
-//      如果使用主板测试，主板必须要用电池供电
-//      查看程序是否正常烧录，是否下载报错，确认正常按下复位按键
-//      万用表测量对应 LED 引脚电压是否变化，如果不变化证明程序未运行，如果变化证明 LED 灯珠损坏
-//      万用表检查对应 SWITCH1 / SWITCH2 引脚电压是否正常变化，是否跟接入信号不符，引脚是否接错
-// 问题2：KEY1 / KEY2 / KEY3 / KEY4 接GND或者按键按下无变化
-//      如果使用主板测试，主板必须要用电池供电
-//      查看程序是否正常烧录，是否下载报错，确认正常按下复位按键
-//      万用表测量对应 LED 引脚电压是否变化，如果不变化证明程序未运行，如果变化证明 LED 灯珠损坏
-//      万用表检查对应 KEY1 / KEY2 / KEY3 / KEY4 引脚电压是否正常变化，是否跟接入信号不符，引脚是否接错
+// 问题1：串口没有数据
+//      查看 逐飞助手 打开的是否是正确的串口，检查打开的 COM 口是否对应的是调试下载器或者 USB-TTL 模块的 COM 口
+//      如果是使用逐飞科技 CMSIS-DAP 调试下载器连接，那么检查下载器线是否松动，检查核心板串口跳线是否已经焊接，串口跳线查看核心板原理图即可找到
+//      如果是使用 USB-TTL 模块连接，那么检查连线是否正常是否松动，模块 TX 是否连接的核心板的 RX，模块 RX 是否连接的核心板的 TX
+// 问题2：串口数据乱码
+//      查看 逐飞助手 设置的波特率是否与程序设置一致，程序中 zf_common_debug.h 文件中 DEBUG_UART_BAUDRATE 宏定义为 debug uart 使用的串口波特率
+// 问题3：串口输出 imu660ra init error.
+//      检查imu660ra的接线是否正确
+//      检查imu660ra的模块是不是坏了
+//      给信号线加上拉看看
+// 问题4：imu660ra 数值异常
+//      看看是不是线松了 或者信号线被短路了
+//      可能模块部分受损
