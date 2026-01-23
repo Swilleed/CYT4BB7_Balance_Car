@@ -1,0 +1,52 @@
+# 然后排除需要保留的文件类型：.c 和 .h
+!*.c
+!*.h
+
+# IDE 和编辑器文件
+/.vscode/launch.json
+/.settings/
+/.eide/log/
+/.eide.usr.ctx.json
+
+# 构建输出文件
+/build/
+/bin/
+/obj/
+/out/
+
+# EIDE 模板文件
+*.ept
+*.eide-template
+
+# 编译输出文件
+*.elf
+*.hex
+*.bin
+*.axf
+*.a
+*.lib
+
+# 调试和映射文件
+*.map
+*.lst
+*.debug
+*.sym
+
+# 中间编译文件
+*.o
+*.d
+*.su
+*.dep    
+*.htm    
+*.crf    
+
+# 备份文件
+*~
+*.bak
+
+# 操作系统生成的文件
+.DS_Store
+Thumbs.db
+
+# 额外忽略 UVision 相关文件（如 test.uvguix.*）
+test.uvguix.*
