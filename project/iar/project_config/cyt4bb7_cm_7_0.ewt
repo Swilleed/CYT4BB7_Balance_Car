@@ -1460,6 +1460,12 @@
             <file>
                 <name>$PROJ_DIR$\..\..\code\Apps\app.h</name>
             </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Apps\menu.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Apps\menu.h</name>
+            </file>
         </group>
         <group>
             <name>Drivers</name>
