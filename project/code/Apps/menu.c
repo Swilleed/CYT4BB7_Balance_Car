@@ -21,6 +21,21 @@ Menu *InitMenu(void)
 }
 
 /**
+ * 添加子菜单项
+ * @param parent 父菜单指针
+ * @param child 子菜单指针
+ */
+void Menu_AddChild(Menu *parent, Menu *child)
+{
+    if (parent->child_count < MENU_MAX_CHILDREN)
+    {
+        parent->children[parent->child_count] = child;
+        parent->child_count++;
+        child->parent = parent;
+    }
+}
+
+/**
  * 辅助函数，将浮点数转换为字符串
  * @param value 浮点数值
  * @param buffer 存储字符串的缓冲区
@@ -118,14 +133,14 @@ void DisplayMenu(void)
         return;
     }
 
-    oled_clear_screen();
-    oled_show_string(1, 1, "Main");
+    // oled_clear();
+    oled_show_string(1, 1, CurrentMenu->title);
 
     for (uint8_t i = 0; i < CurrentMenu->child_count; i++)
     {
         uint8_t row = i + 2; // 行号从1开始，第二行起列出子菜单
         char line[17];
         snprintf(line, sizeof(line), "%u %c%s", (unsigned)(i + 1), (i == CurrentSelection) ? '>' : ' ', CurrentMenu->children[i]->title);
-        oled_show_string(row, 1, line);
+        oled_show_string(1, row, line);
     }
 }

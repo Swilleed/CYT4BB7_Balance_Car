@@ -19,6 +19,7 @@ typedef struct menu
 } Menu;
 
 Menu *InitMenu(void);
+void Menu_AddChild(Menu *parent, Menu *child);
 void DisplayMenu(void);
 
 #endif // __MENU_H
