@@ -6,16 +6,18 @@
  * @param kp 比例系数
  * @param ki 积分系数
  * @param kd 微分系数
+ * @param output_min 输出最小值
+ * @param output_max 输出最大值
  */
-void PID_Init(PID_TypeDef *pid, float kp, float ki, float kd)
+void PID_Init(PID_TypeDef *pid, float kp, float ki, float kd, float output_min, float output_max)
 {
     pid->Err = 0.0f;
     pid->Err_Last = 0.0f;
     pid->Err_Prev = 0.0f;
     pid->Integral = 0.0f;
     pid->Output = 0.0f;
-    pid->OutputMax = 99.0f; // 与 PWM 占空比范围一致
-    pid->OutputMin = -99.0f;
+    pid->OutputMax = output_max; // 与 PWM 占空比范围一致
+    pid->OutputMin = output_min;
     pid->Kp = kp;
     pid->Ki = ki;
     pid->Kd = kd;
