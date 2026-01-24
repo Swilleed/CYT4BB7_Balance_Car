@@ -4,19 +4,19 @@
 #include "pid_controller.h"
 
 // Hardware pin configuration placeholders (fill in once pins are finalized)
-#define MOTOR_LEFT_PWM_PORT        /* GPIO port for left motor PWM */
-#define MOTOR_LEFT_PWM_PIN         /* GPIO pin for left motor PWM */
-#define MOTOR_LEFT_DIR_PORT        /* GPIO port for left motor direction */
-#define MOTOR_LEFT_DIR_PIN         /* GPIO pin for left motor direction */
-#define MOTOR_LEFT_ENCODER_TIMER   /* Timer/peripheral for left motor encoder */
-#define MOTOR_LEFT_ENCODER_CHANNEL /* Channel index for left motor encoder */
+#define MOTOR_LEFT_PWM_PIN TCPWM_CH11_P05_2
+#define MOTOR_LEFT_DIR_PIN_P P20_0
+#define MOTOR_LEFT_DIR_PIN_N P20_1
+#define MOTOR_LEFT_ENCODER_TIMER TC_CH58_ENCODER
+#define MOTOR_LEFT_ENCODER_PIN_A TC_CH58_ENCODER_CH1_P17_3
+#define MOTOR_LEFT_ENCODER_PIN_B TC_CH58_ENCODER_CH2_P17_4
 
-#define MOTOR_RIGHT_PWM_PORT        /* GPIO port for right motor PWM */
-#define MOTOR_RIGHT_PWM_PIN         /* GPIO pin for right motor PWM */
-#define MOTOR_RIGHT_DIR_PORT        /* GPIO port for right motor direction */
-#define MOTOR_RIGHT_DIR_PIN         /* GPIO port for right motor direction */
-#define MOTOR_RIGHT_ENCODER_TIMER   /* Timer/peripheral for right motor encoder */
-#define MOTOR_RIGHT_ENCODER_CHANNEL /* Channel index for right motor encoder */
+#define MOTOR_RIGHT_PWM_PIN TCPWM_CH12_P05_3
+#define MOTOR_RIGHT_DIR_PIN_P P20_2
+#define MOTOR_RIGHT_DIR_PIN_N P20_3
+#define MOTOR_RIGHT_ENCODER_TIMER TC_CH27_ENCODER
+#define MOTOR_RIGHT_ENCODER_PIN_A TC_CH27_ENCODER_CH1_P19_2
+#define MOTOR_RIGHT_ENCODER_PIN_B TC_CH27_ENCODER_CH2_P19_3
 
 #ifndef MOTOR_LEFT_ENCODER_INDEX
 #define MOTOR_LEFT_ENCODER_INDEX (0U)
@@ -27,11 +27,11 @@
 #endif
 
 #ifndef MOTOR_LEFT_PWM_CHANNEL
-#define MOTOR_LEFT_PWM_CHANNEL (0U)
+#define MOTOR_LEFT_PWM_CHANNEL MOTOR_LEFT_PWM_PIN
 #endif
 
 #ifndef MOTOR_RIGHT_PWM_CHANNEL
-#define MOTOR_RIGHT_PWM_CHANNEL (1U)
+#define MOTOR_RIGHT_PWM_CHANNEL MOTOR_RIGHT_PWM_PIN
 #endif
 
 typedef struct
@@ -41,16 +41,18 @@ typedef struct
     PID_TypeDef pid;
     int32_t encoderCount;
     int32_t totalCount;
-    uint8_t encoderChannel;
-    int8_t direction;
+    uint8_t encoderPinA;
+    uint8_t encoderPinB;
+    uint8_t encoderTimer;
     uint8_t pwmChannel;
-    uint8_t directionPin;
+    uint8_t directionPin_P;
+    uint8_t directionPin_N;
 } Motor_TypeDef;
 
 extern Motor_TypeDef motorLeft;
 extern Motor_TypeDef motorRight;
 
-void Motor_Init(void);
+void Motor_Init(float kp, float ki, float kd);
 void Motor_SetTargetSpeed(Motor_TypeDef *motor, float targetSpeed);
 void Motor_UpdateSpeed(Motor_TypeDef *motor, float actualSpeed);
 void Motor_SetDuty(Motor_TypeDef *motor, float duty);

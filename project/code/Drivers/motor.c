@@ -13,22 +13,33 @@ void Motor_Init(float kp, float ki, float kd)
     PID_Init(&motorLeft.pid, kp, ki, kd);
     PID_Init(&motorRight.pid, kp, ki, kd);
 
+    encoder_quad_init((encoder_index_enum)MOTOR_LEFT_ENCODER_INDEX,
+                      (encoder_channel1_enum)MOTOR_LEFT_ENCODER_PIN_A,
+                      (encoder_channel2_enum)MOTOR_LEFT_ENCODER_PIN_B);
+    encoder_quad_init((encoder_index_enum)MOTOR_RIGHT_ENCODER_INDEX,
+                      (encoder_channel1_enum)MOTOR_RIGHT_ENCODER_PIN_A,
+                      (encoder_channel2_enum)MOTOR_RIGHT_ENCODER_PIN_B);
+
     motorLeft.speed = 0.0f;
     motorLeft.targetSpeed = 0.0f;
     motorLeft.encoderCount = 0;
     motorLeft.totalCount = 0;
-    motorLeft.direction = 0;
     motorLeft.pwmChannel = MOTOR_LEFT_PWM_CHANNEL;
-    motorLeft.encoderChannel = (uint8_t)MOTOR_LEFT_ENCODER_INDEX;
-    motorLeft.directionPin = MOTOR_LEFT_DIR_PIN;
+    motorLeft.encoderPinA = (uint8_t)MOTOR_LEFT_ENCODER_PIN_A;
+    motorLeft.encoderPinB = (uint8_t)MOTOR_LEFT_ENCODER_PIN_B;
+    motorLeft.encoderTimer = (uint8_t)MOTOR_LEFT_ENCODER_TIMER;
+    motorLeft.directionPin_P = MOTOR_LEFT_DIR_PIN_P;
+    motorLeft.directionPin_N = MOTOR_LEFT_DIR_PIN_N;
     motorRight.speed = 0.0f;
     motorRight.targetSpeed = 0.0f;
     motorRight.encoderCount = 0;
     motorRight.totalCount = 0;
-    motorRight.direction = 0;
     motorRight.pwmChannel = MOTOR_RIGHT_PWM_CHANNEL;
-    motorRight.encoderChannel = (uint8_t)MOTOR_RIGHT_ENCODER_INDEX;
-    motorRight.directionPin = MOTOR_RIGHT_DIR_PIN;
+    motorRight.encoderPinA = (uint8_t)MOTOR_RIGHT_ENCODER_PIN_A;
+    motorRight.encoderPinB = (uint8_t)MOTOR_RIGHT_ENCODER_PIN_B;
+    motorRight.encoderTimer = (uint8_t)MOTOR_RIGHT_ENCODER_TIMER;
+    motorRight.directionPin_P = MOTOR_RIGHT_DIR_PIN_P;
+    motorRight.directionPin_N = MOTOR_RIGHT_DIR_PIN_N;
 }
 
 /**
@@ -50,26 +61,19 @@ void Motor_SetDuty(Motor_TypeDef *motor, float duty)
 {
     if (duty < 0)
     {
-        motor->direction = -1;
         duty = -duty;
-    }
-    else if (duty > 0)
-    {
-        motor->direction = 1;
-    }
-    else
-    {
-        motor->direction = 0;
+        gpio_set_level((gpio_pin_enum)(motor->directionPin_P), 0);
+        gpio_set_level((gpio_pin_enum)(motor->directionPin_N), 1);
     }
     pwm_set_duty(motor->pwmChannel, (uint32_t)(duty));
-    if (motor->direction == 1)
+    if (duty > 0)
     {
-        gpio_set_level((gpio_pin_enum)(motor->directionPin), 1);
+        // duty = duty;
+        gpio_set_level((gpio_pin_enum)(motor->directionPin_P), 1);
+        gpio_set_level((gpio_pin_enum)(motor->directionPin_N), 0);
     }
-    else if (motor->direction == -1)
-    {
-        gpio_set_level((gpio_pin_enum)(motor->directionPin), 0);
-    }
+
+    pwm_set_duty(motor->pwmChannel, (uint32_t)(duty));
 }
 
 /**
@@ -98,10 +102,10 @@ int16_t Motor_SampleEncoder(Motor_TypeDef *motor)
         return 0;
     }
 
-    int16_t delta = encoder_get_count((encoder_index_enum)(motor->encoderChannel));
+    int16_t delta = encoder_get_count((encoder_index_enum)(motor->encoderPinA));
     motor->encoderCount = delta;
     motor->totalCount += delta;
-    encoder_clear_count((encoder_index_enum)(motor->encoderChannel));
+    encoder_clear_count((encoder_index_enum)(motor->encoderTimer));
 
     return delta;
 }
@@ -134,7 +138,7 @@ void Motor_ResetTotalDistance(Motor_TypeDef *motor)
 
     motor->totalCount = 0;
     motor->encoderCount = 0;
-    encoder_clear_count((encoder_index_enum)(motor->encoderChannel));
+    encoder_clear_count((encoder_index_enum)(motor->encoderPinA));
 }
 
 /**
