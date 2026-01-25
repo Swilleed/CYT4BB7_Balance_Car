@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BuildDb>
+    <Tool>
+        <Name>linker</Name>
+        <Parent>
+            <Path>C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo\iar\project_config\Debug_m7_0\Exe\cyt4bb7_cm_7_0.out</Path>
+            <Output>
+                <Path>C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo\iar\Debug_m7_0\List\cyt4bb7_cm_7_0.map</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo - 1\iar\project_config\Debug_m7_0\Exe\cyt4bb7_cm_7_0.out</Path>
+            <Output>
+                <Path>C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo - 1\iar\Debug_m7_0\List\cyt4bb7_cm_7_0.map</Path>
+            </Output>
+        </Parent>
+    </Tool>
+</BuildDb>

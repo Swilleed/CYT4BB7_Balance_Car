@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BuildDb>
+    <Tool>
+        <Name>linker</Name>
+        <Parent>
+            <Path>C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo\iar\project_config\Debug_m7_1\Exe\cyt4bb7_cm_7_1.out</Path>
+            <Output>
+                <Path>C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo\iar\Debug_m7_1\List\cyt4bb7_cm_7_1.map</Path>
+            </Output>
+        </Parent>
+    </Tool>
+</BuildDb>
