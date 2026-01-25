@@ -75,6 +75,8 @@ static void HandleInput(void)
     {
         if (key_get_state(KEY_DOWN) == KEY_SHORT_PRESS)
         {
+            CurrentSelection = (CurrentSelection + 1) % CurrentMenu->child_count;
+            /*
             if (CurrentSelection < CurrentMenu->child_count - 1)
             {
                 CurrentSelection++; // 下移
@@ -83,9 +85,12 @@ static void HandleInput(void)
             {
                 CurrentSelection = 0;
             }
+            */
         }
         else if (key_get_state(KEY_UP) == KEY_SHORT_PRESS)
         {
+            CurrentSelection = (CurrentSelection + CurrentMenu->child_count - 1) % CurrentMenu->child_count;
+            /*
             if (CurrentSelection > 0)
             {
                 CurrentSelection--; // 上移
@@ -94,6 +99,7 @@ static void HandleInput(void)
             {
                 CurrentSelection = CurrentMenu->child_count - 1;
             }
+            */
         }
         else if (key_get_state(KEY_SELECT) == KEY_SHORT_PRESS)
         {
@@ -134,7 +140,7 @@ void DisplayMenu(void)
     }
 
     // oled_clear();
-    oled_show_string(1, 1, CurrentMenu->title);
+    //oled_show_string(1, 1, CurrentMenu->title);
 
     for (uint8_t i = 0; i < CurrentMenu->child_count; i++)
     {
