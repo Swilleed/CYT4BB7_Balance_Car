@@ -49,12 +49,12 @@ int main(void)
     clock_init(SYSTEM_CLOCK_250M); // 时钟配置及系统初始化<务必保留>
     debug_init();                  // 调试串口信息初始化
     // 此处编写用户代码 例如外设初始化代码等
-
+    Motor_Init(1.0f, 0.0f, 0.0f); // 初始化电机及PID参数
     // 此处编写用户代码 例如外设初始化代码等
     while (true)
     {
         // 此处编写需要循环执行的代码
-
+        Motor_SetDuty(&motorLeft, 5000); // 设置左电机占空比为50%
         // 此处编写需要循环执行的代码
     }
 }

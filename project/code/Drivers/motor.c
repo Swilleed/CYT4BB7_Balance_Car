@@ -1,6 +1,9 @@
 #include "zf_common_headfile.h"
 #include "motor.h"
 #include "pid_controller.h"
+#include "zf_driver_gpio.h"
+#include "zf_driver_pwm.h"
+#include "zf_driver_encoder.h"
 
 Motor_TypeDef motorLeft;
 Motor_TypeDef motorRight;
@@ -10,6 +13,14 @@ Motor_TypeDef motorRight;
  */
 void Motor_Init(float kp, float ki, float kd)
 {
+    gpio_init((gpio_pin_enum)MOTOR_LEFT_DIR_PIN_P, GPO, 0, GPO_PUSH_PULL);
+    gpio_init((gpio_pin_enum)MOTOR_LEFT_DIR_PIN_N, GPO, 0, GPO_PUSH_PULL);
+    gpio_init((gpio_pin_enum)MOTOR_RIGHT_DIR_PIN_P, GPO, 0, GPO_PUSH_PULL);
+    gpio_init((gpio_pin_enum)MOTOR_RIGHT_DIR_PIN_N, GPO, 0, GPO_PUSH_PULL);
+
+    pwm_init((pwm_channel_enum)MOTOR_LEFT_PWM_CHANNEL, MOTOR_PWM_FREQ, MOTOR_PWM_INIT_DUTY);
+    pwm_init((pwm_channel_enum)MOTOR_RIGHT_PWM_CHANNEL, MOTOR_PWM_FREQ, MOTOR_PWM_INIT_DUTY);
+
     PID_Init(&motorLeft.pid, kp, ki, kd);
     PID_Init(&motorRight.pid, kp, ki, kd);
 
@@ -59,21 +70,29 @@ void Motor_SetTargetSpeed(Motor_TypeDef *motor, float targetSpeed)
  */
 void Motor_SetDuty(Motor_TypeDef *motor, float duty)
 {
+    if (motor == NULL)
+    {
+        return;
+    }
+
     if (duty < 0)
     {
         duty = -duty;
         gpio_set_level((gpio_pin_enum)(motor->directionPin_P), 0);
         gpio_set_level((gpio_pin_enum)(motor->directionPin_N), 1);
     }
-    pwm_set_duty(motor->pwmChannel, (uint32_t)(duty));
-    if (duty > 0)
+    else if (duty > 0)
     {
-        // duty = duty;
         gpio_set_level((gpio_pin_enum)(motor->directionPin_P), 1);
         gpio_set_level((gpio_pin_enum)(motor->directionPin_N), 0);
     }
 
-    pwm_set_duty(motor->pwmChannel, (uint32_t)(duty));
+    if (duty > PWM_DUTY_MAX)
+    {
+        duty = PWM_DUTY_MAX;
+    }
+
+    pwm_set_duty((pwm_channel_enum)(motor->pwmChannel), (uint32_t)(duty));
 }
 
 /**
@@ -102,7 +121,7 @@ int16_t Motor_SampleEncoder(Motor_TypeDef *motor)
         return 0;
     }
 
-    int16_t delta = encoder_get_count((encoder_index_enum)(motor->encoderPinA));
+    int16_t delta = encoder_get_count((encoder_index_enum)(motor->encoderTimer));
     motor->encoderCount = delta;
     motor->totalCount += delta;
     encoder_clear_count((encoder_index_enum)(motor->encoderTimer));
@@ -138,7 +157,7 @@ void Motor_ResetTotalDistance(Motor_TypeDef *motor)
 
     motor->totalCount = 0;
     motor->encoderCount = 0;
-    encoder_clear_count((encoder_index_enum)(motor->encoderPinA));
+    encoder_clear_count((encoder_index_enum)(motor->encoderTimer));
 }
 
 /**
