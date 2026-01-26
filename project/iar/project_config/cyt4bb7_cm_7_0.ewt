@@ -1470,6 +1470,12 @@
         <group>
             <name>Drivers</name>
             <file>
+                <name>$PROJ_DIR$\..\..\code\Drivers\infrared_sense.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Drivers\infrared_sense.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\code\Drivers\motor.c</name>
             </file>
             <file>
