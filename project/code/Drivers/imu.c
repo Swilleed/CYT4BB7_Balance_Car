@@ -87,34 +87,3 @@ uint8_t IMU_ReadData(IMU_Data *data)
     
     return 1;
 }
-
-// ==================== 可选：分开读取版本（备用） ====================
-uint8_t IMU_ReadData_Separate(IMU_Data *data)
-{
-    uint8_t buffer[6];
-    
-    data->timestamp = systick_get_ms();
-    
-    // 读取加速度计
-    soft_iic_read_8bit_registers(&iic, ICM45686_REG_ACCEL_XOUT_H, buffer, 6);
-    int16_t ax = (int16_t)((buffer[0] << 8) | buffer[1]);
-    int16_t ay = (int16_t)((buffer[2] << 8) | buffer[3]);
-    int16_t az = (int16_t)((buffer[4] << 8) | buffer[5]);
-    
-    // 读取陀螺仪
-    soft_iic_read_8bit_registers(&iic, ICM45686_REG_GYRO_XOUT_H, buffer, 6);
-    int16_t gx = (int16_t)((buffer[0] << 8) | buffer[1]);
-    int16_t gy = (int16_t)((buffer[2] << 8) | buffer[3]);
-    int16_t gz = (int16_t)((buffer[4] << 8) | buffer[5]);
-    
-    // 转换为物理量
-    data->ax = ax * accel_scale;
-    data->ay = ay * accel_scale;
-    data->az = az * accel_scale;
-    
-    data->gx = gx * gyro_scale;
-    data->gy = gy * gyro_scale;
-    data->gz = gz * gyro_scale;
-    
-    return 1;
-}
