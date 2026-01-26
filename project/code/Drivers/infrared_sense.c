@@ -83,3 +83,9 @@ uint8_t GetInfraredSenseFlag(void)
     // 返回滤波后的全局变量
     return InfraredSenseFlag;
 }
+
+void Debug_InfraredSense(void)
+{
+    uint8_t status = GetInfraredSenseFlag();
+    oled_show_uint(1, 1, status, 5);
+}
