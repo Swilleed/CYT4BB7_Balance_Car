@@ -21,8 +21,8 @@ void Motor_Init(float kp, float ki, float kd)
     pwm_init((pwm_channel_enum)MOTOR_LEFT_PWM_CHANNEL, MOTOR_PWM_FREQ, MOTOR_PWM_INIT_DUTY);
     pwm_init((pwm_channel_enum)MOTOR_RIGHT_PWM_CHANNEL, MOTOR_PWM_FREQ, MOTOR_PWM_INIT_DUTY);
 
-    PID_Init(&motorLeft.pid, kp, ki, kd);
-    PID_Init(&motorRight.pid, kp, ki, kd);
+    PID_Init(&motorLeft.pid, kp, ki, kd, -PWM_DUTY_MAX, PWM_DUTY_MAX);
+    PID_Init(&motorRight.pid, kp, ki, kd, -PWM_DUTY_MAX, PWM_DUTY_MAX);
 
     encoder_quad_init((encoder_index_enum)MOTOR_LEFT_ENCODER_INDEX,
                       (encoder_channel1_enum)MOTOR_LEFT_ENCODER_PIN_A,

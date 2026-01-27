@@ -2,7 +2,8 @@
 #define __PID_CONTROLLER_H__
 
 // PID参数结构体
-typedef struct {
+typedef struct
+{
     float TargetValue; // 目标值
     float ActualValue; // 实际值
     float Err;         // 当前误差
@@ -15,7 +16,7 @@ typedef struct {
     float OutputMin;
 } PID_TypeDef;
 
-void PID_Init(PID_TypeDef *pid, float kp, float ki, float kd);
+void PID_Init(PID_TypeDef *pid, float kp, float ki, float kd, float output_min, float output_max);
 float PID_Calculate(PID_TypeDef *pid, float target, float actual);
 
 #endif // __PID_CONTROLLER_H__

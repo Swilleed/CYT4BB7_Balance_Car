@@ -1,5 +1,6 @@
 #include "zf_common_headfile.h"
 #include "flash_logger.h"
+#include "zf_device_oled.h"
 
 /**
  * @brief 初始化Flash日志记录器
@@ -66,5 +67,56 @@ void Logger_ReadBlock(uint32 start_page, void *buffer, uint32 byte_len)
         flash_read_page(0, current_page, p_dest, words_to_read);
         p_dest += words_to_read;
         totol_words -= words_to_read;
+    }
+}
+
+/**
+ * @brief Flash Logger 功能自测调试接口
+ * @note 该函数会测试从第 60 页开始存取 3 个 PathPoint_t 结构体
+ */
+void Logger_Debug_Test(void)
+{
+    // 1. 准备测试数据
+    typedef struct
+    {
+        int16 left_ticks;
+        int16 right_ticks;
+        float yaw;
+    } TestPoint_t; // 临时定义一个结构体，模拟应用层数据
+
+    TestPoint_t write_data[3] = {
+        {100, -100, 12.5f},
+        {500, 200, 45.0f},
+        {999, 888, 179.9f}};
+    TestPoint_t read_data[3] = {0}; // 接收读取结果
+
+    oled_clear();
+    oled_show_string(0, 0, "Flash Test Inc");
+
+    // 2. 写入数据到 Flash (从第 60 页开始)
+    Logger_WriteBlock(60, (void *)write_data, sizeof(write_data));
+    oled_show_string(0, 1, "Write Done");
+
+    // 3. 读回数据
+    Logger_ReadBlock(60, (void *)read_data, sizeof(read_data));
+    oled_show_string(0, 2, "Read Done");
+
+    // 4. 显示读回的数据进行比对 (取第 1 个点和第 3 个点)
+    // 显示第 1 个点的 Left Ticks (预期 100)
+    oled_show_string(0, 3, "P1 L:");
+    oled_show_int(40, 3, read_data[0].left_ticks, 4);
+
+    // 显示第 3 个点的 Yaw (预期 179.9)
+    oled_show_string(0, 4, "P3 Y:");
+    oled_show_float(40, 4, read_data[2].yaw, 3, 1);
+
+    // 5. 自动校验
+    if (memcmp(write_data, read_data, sizeof(write_data)) == 0)
+    {
+        oled_show_string(0, 6, "VERIFY: SUCCESS");
+    }
+    else
+    {
+        oled_show_string(0, 6, "VERIFY: FAIL!!!");
     }
 }
