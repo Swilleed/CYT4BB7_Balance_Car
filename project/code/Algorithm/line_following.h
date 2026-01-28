@@ -17,7 +17,7 @@ typedef struct {
     uint32_t lost_tick;
 } LineFollower_t;
 
-// 简洁接口
+// 接口
 void line_init(void);
 void line_update(void);
 int16_t line_get_pid_out(void);

@@ -4,7 +4,7 @@
 
 static LineFollower_t follower = {0};
 
-// 简洁的偏差映射表（10倍放大）
+// 偏差映射表（10倍放大）
 static const int8_t dev_map[32] = {
      0, +10, +5, +8, -5, 0, 0, 0, -10, -5, -8, -3, -8, -4, -6, -2,
     +10, +5, +8, +3, +5, +2, +3, +1, +8, +4, +6, +2, +6, +3, +4, 0
@@ -48,7 +48,7 @@ TrackState_t line_get_state(void) {
     return follower.state;
 }
 
-// 直接计算差速（优雅的单行实现）
+// 直接计算差速
 void line_get_motor_diff(int16_t base, int16_t *left, int16_t *right) {
     int16_t pid = line_get_pid_out();
     int16_t l = base - pid, r = base + pid;
@@ -58,7 +58,7 @@ void line_get_motor_diff(int16_t base, int16_t *left, int16_t *right) {
     *right = (r < 0) ? 0 : (r > 99 ? 99 : r);
 }
 
-// 简洁的调试输出
+// 调试输出
 void line_debug(void) {
     uint8_t sens = GetInfraredSenseFlag();
     int16_t left, right;
