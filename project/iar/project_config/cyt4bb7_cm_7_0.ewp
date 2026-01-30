@@ -1431,9 +1431,27 @@
             <file>
                 <name>$PROJ_DIR$\..\..\code\Apps\menu.h</name>
             </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Apps\path_task.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Apps\path_task.h</name>
+            </file>
         </group>
         <group>
             <name>Drivers</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Drivers\flash_logger.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Drivers\flash_logger.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Drivers\infrared_sense.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Drivers\infrared_sense.h</name>
+            </file>
             <file>
                 <name>$PROJ_DIR$\..\..\code\Drivers\motor.c</name>
             </file>
