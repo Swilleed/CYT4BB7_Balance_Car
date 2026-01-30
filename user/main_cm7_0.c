@@ -37,6 +37,8 @@
 #include "FOC.h"
 #include "AS5600.h"
 #include "math.h"
+#include "PID.h"
+#include "KF.h"
 // 打开新的工程或者工程移动了位置务必执行以下操作
 // 第一步 关闭上面所有打开的文件
 // 第二步 project->clean  等待下方进度条走完
@@ -71,10 +73,61 @@ uint8 led_state = 0;
 
 soft_iic_info_struct AS561,AS562;
 
-float Mech_Angle,Elec_Angle,Pre_Angle,Speed = 0,Pre_Speed = 0;
+float Mech_Angle[3],Elec_Angle[3],Obs_Speed[3] = {0};
 extern uint8_t FOCcounter;
 
-float duty2 = 0,duty3 = 0,duty4 = 0;
+
+float duty1[3] = {0},duty2[3] = {0},duty3[3] = {0};
+
+
+PID_TypeDef M1 = {
+	
+	.error0 = 0,
+	.error1 = 0,
+	.error2 = 0,
+	
+	.Kp = 100,
+	.Ki = 5,
+	.Kd = 0,
+	
+	.OutMax = 5,
+	.OutMin = -5,
+	
+	.Target = 8,
+	.Out = 0,
+	
+};
+PID_TypeDef M2 = {
+	
+	.error0 = 0,
+	.error1 = 0,
+	.error2 = 0,
+	
+	.Kp = 100,
+	.Ki = 5,
+	.Kd = 0,
+	
+	.OutMax = 5,
+	.OutMin = -5,
+	
+	.Target = -10,
+	.Out = 0,
+	
+};
+
+float uq[3];
+KalmanFilter1D_Speed KF_Speed1 = {
+    .Speed_Hat = 0.0f,  
+    .P = 1.0f,          
+    .Q = 0.001f,       
+    .R = 0.1f         
+};
+KalmanFilter1D_Speed KF_Speed2 = {
+    .Speed_Hat = 0.0f,  
+    .P = 1.0f,          
+    .Q = 0.001f,       
+    .R = 0.1f         
+};
 
 
 int main(void)
@@ -83,42 +136,60 @@ int main(void)
     clock_init(SYSTEM_CLOCK_250M); 	// 时钟配置及系统初始化<务必保留>
     debug_init();                          // 调试串口信息初始化
     
-    pit_init(PIT_CH0,1000);
-    pit_enable(PIT_CH0);  
+    pit_init(PIT_CH0,100);
+    pit_init(PIT_CH1,100);
+    pit_enable(PIT_CH0); 
+    pit_enable(PIT_CH1); 
     AS5600_Init(&AS561,1);
     AS5600_Init(&AS562,2);
     // 此处编写用户代码 例如外设初始化代码等
-    pwm_init(TCPWM_CH30_P10_2, 20000, 0);
-    pwm_init(TCPWM_CH31_P10_3, 20000, 0);
-    pwm_init(TCPWM_CH32_P10_4, 20000, 0);
-    
-    Pre_Angle = AS5600_Read(&AS561);
-    
+    FOC_init();
     // 此处编写用户代码 例如外设初始化代码等
     while(true)
     {
         
-        
-        
-        
-        
-        if(FOCcounter >= 10){
-          FOCcounter= 0;
-          Pre_Angle = Mech_Angle;
-          Mech_Angle = AS5600_Read(&AS561);
-          Pre_Speed = Speed;
-          Speed = AS5600_Speed_Read(Pre_Angle,Mech_Angle,Pre_Speed,Speed,10);//  m/s
+       
+      
+        if(FOCcounter >= 5){
+          FOCcounter = 0;
           
-          Elec_Angle = Elec_Angle_Set(Mech_Angle);
-          SimpleFOC(0,0.1,Elec_Angle,&duty2,&duty3,&duty4);
-          pwm_set_duty(TCPWM_CH30_P10_2,(uint32)(5000 * duty2 / 100));
-          pwm_set_duty(TCPWM_CH31_P10_3,(uint32)(5000 * duty3 / 100));
-          pwm_set_duty(TCPWM_CH32_P10_4,(uint32)(5000 * duty4 / 100));
+          Mech_Angle[1] = AS5600_Read(&AS561);
+          Obs_Speed[1] = Speed_Update1(Mech_Angle[1]);
+          KalmanFilter1D_Speed_Update(&KF_Speed1,Obs_Speed[1]);
+          M1.Actual = KF_Speed1.Speed_Hat;
+          PID_Update_Add(&M1,0.0005);
+          uq[1] = M1.Out;
+          Elec_Angle[1] = Elec_Angle_Set(Mech_Angle[1]);
+          SimpleFOC(0,uq[1],Elec_Angle[1],&duty1[1],&duty2[1],&duty3[1]);
           
+          Mech_Angle[2] = AS5600_Read(&AS562);
+          Obs_Speed[2] = Speed_Update2(Mech_Angle[2]);
+          KalmanFilter1D_Speed_Update(&KF_Speed2,Obs_Speed[2]);
+          M2.Actual = KF_Speed2.Speed_Hat;   
+          PID_Update_Add(&M2,0.0005);         
+          uq[2] = -M2.Out;
+          Elec_Angle[2] = Elec_Angle_Set(Mech_Angle[2]);
+          SimpleFOC(0,uq[2],Elec_Angle[2],&duty1[2],&duty2[2],&duty3[2]);
           
-          printf("%.2f\r\n",Speed);
-            
+          FOC_pwm_set_duty(duty1[1],duty2[1],duty3[1],1);
+          FOC_pwm_set_duty(duty1[2],duty2[2],duty3[2],2);
+          
+          //printf("%.2f,%.2f,%.2f\n",M1.Target,M1.Actual,M1.Out);
+          printf("%.2f,%.2f,%.2f\n",M2.Target,M2.Actual,M2.Out);
+          
         }
+        
+        
+          
+          
+          
+          
+          
+          
+          
+          
+            
+          
         
         
         

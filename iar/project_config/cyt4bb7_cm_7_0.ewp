@@ -1128,6 +1128,18 @@
             <name>$PROJ_DIR$\..\..\code\FOC.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\code\KF.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\KF.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\PID.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\PID.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\code\本文件夹作用.txt</name>
         </file>
     </group>
