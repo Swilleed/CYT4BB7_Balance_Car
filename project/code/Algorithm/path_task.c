@@ -3,7 +3,7 @@
 #include "flash_logger.h"
 
 // 内部状态定义
-typedef enum {S
+typedef enum {
     PATH_STATE_IDLE = 0,
     PATH_STATE_RECORDING,
     PATH_STATE_REPLAYING
@@ -88,4 +88,9 @@ void Path_GetReplaySpeed(float *outL, float *outR) {
 
 uint8 Path_IsReplaying(void) {
     return (currentState == PATH_STATE_REPLAYING);
+}
+
+void Path_Delete(PathID_t id) {
+    uint32 zero = 0;
+    Logger_WriteBlock((uint32)id, &zero, sizeof(zero)); // 点数标0即删除
 }

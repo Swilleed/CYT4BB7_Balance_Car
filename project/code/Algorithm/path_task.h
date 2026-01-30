@@ -19,6 +19,7 @@ typedef enum {
 #define MAX_POINTS 800    // 最大记录点数（根据 RAM 大小调整）
 
 // 外部调用接口
+void Path_Delete(PathAreaID_t area);
 void Path_StartRecord(PathID_t id);
 void Path_StopRecord(void);
 void Path_StartReplay(PathID_t id);
