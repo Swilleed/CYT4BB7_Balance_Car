@@ -49,7 +49,7 @@ void Path_StartReplay(PathID_t id) {
     }
 }
 
-// 核心调度：放在定时器中执行 (例如 20ms)
+// 核心调度：放在定时器中执行 (每XXX ms 调用一次)
 void Path_Tick_Handler(void) {
     if (currentState == PATH_STATE_RECORDING) {
         if (pointCount < MAX_POINTS) {
@@ -77,7 +77,7 @@ void Path_GetReplaySpeed(float *outL, float *outR) {
         int32 errL = pathBuffer[replayIndex].left_pos - Motor_GetTotalDistanceCount(&motorLeft);
         int32 errR = pathBuffer[replayIndex].right_pos - Motor_GetTotalDistanceCount(&motorRight);
         
-        // 这里的 0.6f 是位置增益，你可以根据响应速度调整
+        // 这里的 0.6f 是位置增益系数，根据需要调整哈
         *outL = (float)errL * 0.6f;
         *outR = (float)errR * 0.6f;
     } else {
