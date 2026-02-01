@@ -1443,6 +1443,12 @@
                 <name>$PROJ_DIR$\..\..\code\Algorithm\line_following.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\odometry.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\odometry.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\code\Algorithm\pid_controller.c</name>
                 <configuration>
                     <name>Debug</name>
