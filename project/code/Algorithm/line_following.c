@@ -111,13 +111,13 @@ void Tracking_Control(uint8_t status, int32_t baseSpeed)
         //     {
         //         if (abs_error <= 1.0f)
         //         {
-        //             coefficient1 = 1.1f; // 直道：增强系数
+        //             coefficient1 = 1.1f;
         //             coefficient2 = 2.8f;
         //         }
         //         else
         //         {
-        //             coefficient1 = 1.5f; // 外侧：满油加速
-        //             coefficient2 = 5.3f; // 内侧：暴力反转
+        //             coefficient1 = 1.5f;
+        //             coefficient2 = 5.3f;
         //         }
         //     }
         // }
@@ -142,8 +142,8 @@ void Tracking_Control(uint8_t status, int32_t baseSpeed)
         //         }
         //         else
         //         {
-        //             coefficient1 = 5.3f; // 内侧：暴力反转
-        //             coefficient2 = 1.5f; // 外侧：满油加速
+        //             coefficient1 = 5.3f;
+        //             coefficient2 = 1.5f;
         //         }
         //     }
         // }
