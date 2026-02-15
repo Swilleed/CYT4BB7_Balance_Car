@@ -28,8 +28,8 @@ void PID_Update_Pos(PID_TypeDef *p)
           p->errorInt += p->error0;
         }
 
-//	if(p->errorInt >= 30){p->errorInt = 30;}
-//	if(p->errorInt <= -30){p->errorInt = -30;}
+	if(p->errorInt >= 50){p->errorInt = 50;}
+	if(p->errorInt <= -50){p->errorInt = -50;}
 	
 	p->Out = p->Kp * p->error0
 		   + p->Ki * p->errorInt

@@ -11,9 +11,9 @@ float Ac;
 void AS5600_Init(soft_iic_info_struct *AS560,uint8_t N)
 {
   if(N == 1){
-    soft_iic_init(AS560,0x36,20,P05_0,P05_1);
+    soft_iic_init(AS560,0x36,23,P05_0,P05_1);
   } else if(N == 2){
-    soft_iic_init(AS560,0x36,20,P05_2,P05_3);
+    soft_iic_init(AS560,0x36,23,P05_2,P05_3);
   }
   
 }

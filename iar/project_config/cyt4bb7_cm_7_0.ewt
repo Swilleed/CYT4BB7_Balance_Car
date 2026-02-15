@@ -1447,6 +1447,18 @@
             <name>$PROJ_DIR$\..\..\code\KF.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\code\Madgwick.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Madgwick.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Motor.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Motor.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\code\PID.c</name>
         </file>
         <file>

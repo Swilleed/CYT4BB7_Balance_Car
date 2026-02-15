@@ -1,7 +1,7 @@
 #include "zf_common_headfile.h"
 #include "math.h"
 #include "FOC.h"
-#define PI 3.1415926535f
+#define PI 3.14159f
 #define VDC 12.0f
 // ==================== 核心变换函数 ====================
 // 功能：输入ud、uq、电角度，输出三相PWM占空比

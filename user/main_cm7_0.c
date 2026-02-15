@@ -34,11 +34,14 @@
 ********************************************************************************************************************/
 
 #include "zf_common_headfile.h"
+#include <stdlib.h>
 #include "FOC.h"
 #include "AS5600.h"
 #include "math.h"
 #include "PID.h"
 #include "KF.h"
+#include "Motor.h"
+#include "Madgwick.h"
 // 打开新的工程或者工程移动了位置务必执行以下操作
 // 第一步 关闭上面所有打开的文件
 // 第二步 project->clean  等待下方进度条走完
@@ -71,29 +74,44 @@
 uint16 delay_time = 0;
 uint8 led_state = 0;
 
+extern uint8_t FOCcounter;
+extern uint8_t IMUcounter;
+extern uint16_t BlueTooth;
+
 soft_iic_info_struct AS561,AS562;
 
-float Mech_Angle[3],Elec_Angle[3],Obs_Speed[3] = {0};
-extern uint8_t FOCcounter;
-
-
-float duty1[3] = {0},duty2[3] = {0},duty3[3] = {0};
-
-
+KalmanFilter1D_Speed X_GYRO = {
+    .Speed_Hat = 0.0f,  
+    .P = 1.0f,          
+    .Q = 0.0005f,       
+    .R = 0.5f         
+};
+KalmanFilter1D_Speed FORWARD = {
+    .Speed_Hat = 0.0f,  
+    .P = 1.0f,          
+    .Q = 0.0005f,       
+    .R = 0.5f         
+};
+KalmanFilter1D_Speed TURN = {
+    .Speed_Hat = 0.0f,  
+    .P = 1.0f,          
+    .Q = 0.0005f,       
+    .R = 0.5f         
+};
 PID_TypeDef M1 = {
 	
 	.error0 = 0,
 	.error1 = 0,
 	.error2 = 0,
 	
-	.Kp = 100,
-	.Ki = 5,
+	.Kp = 20,
+	.Ki = 2,
 	.Kd = 0,
 	
 	.OutMax = 5,
 	.OutMin = -5,
 	
-	.Target = 8,
+	.Target = 0,
 	.Out = 0,
 	
 };
@@ -103,93 +121,214 @@ PID_TypeDef M2 = {
 	.error1 = 0,
 	.error2 = 0,
 	
-	.Kp = 100,
-	.Ki = 5,
+	.Kp = 20,
+	.Ki = 2,
 	.Kd = 0,
 	
 	.OutMax = 5,
 	.OutMin = -5,
 	
-	.Target = -10,
+	.Target = 0,
 	.Out = 0,
 	
 };
 
-float uq[3];
-KalmanFilter1D_Speed KF_Speed1 = {
-    .Speed_Hat = 0.0f,  
-    .P = 1.0f,          
-    .Q = 0.001f,       
-    .R = 0.1f         
-};
-KalmanFilter1D_Speed KF_Speed2 = {
-    .Speed_Hat = 0.0f,  
-    .P = 1.0f,          
-    .Q = 0.001f,       
-    .R = 0.1f         
+float Roll,Yaw,Pitch,x_gyro,X_gyro = 0,Last_Roll = 0;
+
+PID_TypeDef _Angle_Speed = {
+	
+	.error0 = 0,
+	.error1 = 0,
+	.error2 = 0,
+	
+	.Kp = 0.3,
+	.Ki = 0,
+	.Kd = 4,
+	
+	.OutMax = 14,
+	.OutMin = -14,
+	
+	.Target = 0,
+	.Out = 0,
+	
 };
 
+float BaseAngle = 0.6;
+PID_TypeDef _Angle = {
+	
+	.error0 = 0,
+	.error1 = 0,
+	.error2 = 0,
+	
+	.Kp = 0.9,
+	.Ki = 0,
+	.Kd = 6,
+	
+	.OutMax = 25,
+	.OutMin = -25,
+	
+	.Target = 0,
+	.Out = -0,
+	
+};
+
+float Average_Speed,Delta_Speed,L_Speed,R_Speed;
+PID_TypeDef _Speed = {
+	
+	.error0 = 0,
+	.error1 = 0,
+	.error2 = 0,
+	
+	.Kp = 1.2,
+	.Ki = -0.01,
+	.Kd = 2.5,
+	
+	.OutMax = 6,
+	.OutMin = -6,
+	
+	.Target = 0,
+	.Out = 0,
+	
+};
+
+PID_TypeDef _Dir = {
+	
+	.error0 = 0,
+	.error1 = 0,
+	.error2 = 0,
+	
+	.Kp = 0.10,
+	.Ki = 0.00,
+	.Kd = 5,
+	
+	.OutMax = 0.8,
+	.OutMin = -0.8,
+	
+	.Target = 0,
+	.Out = 0,
+	
+};
+
+uint8 data_buffer[32];
+uint8 data_len;
+
+void my_ipc_callback(uint32 receive_data)
+{
+    static uint8_t i = 0;
+    
+    if(i == 0){
+      Last_Roll = Roll;
+      Roll = ((float)receive_data / 100) - 180;
+      KalmanFilter1D_Speed_Update(&X_GYRO,(Roll - Last_Roll) / 0.01);
+      X_gyro = X_GYRO.Speed_Hat > 25 ? 25 : (X_GYRO.Speed_Hat < -25 ? -25 : X_GYRO.Speed_Hat);
+      
+    } else if (i == 1){
+      Yaw = ((float)receive_data / 100) - 180;
+    } else if (i == 2){
+      Pitch = ((float)receive_data / 100) - 180;
+    }
+    i ++;
+    if(i == 3){i = 0;}
+    
+}
+
+int forward_speed = 0,turn_speed = 0;
 
 int main(void)
 {
     
     clock_init(SYSTEM_CLOCK_250M); 	// 时钟配置及系统初始化<务必保留>
     debug_init();                          // 调试串口信息初始化
+    oled_init();
+    wireless_uart_init();
+    system_delay_init(); 
+    
+    SCB_DisableDCache(); 
+    ipc_communicate_init(IPC_PORT_1, my_ipc_callback);
     
     pit_init(PIT_CH0,100);
-    pit_init(PIT_CH1,100);
     pit_enable(PIT_CH0); 
-    pit_enable(PIT_CH1); 
+    
+    
     AS5600_Init(&AS561,1);
     AS5600_Init(&AS562,2);
-    // 此处编写用户代码 例如外设初始化代码等
     FOC_init();
-    // 此处编写用户代码 例如外设初始化代码等
+    
+    
     while(true)
     {
-        
-       
-      
-        if(FOCcounter >= 5){
-          FOCcounter = 0;
-          
-          Mech_Angle[1] = AS5600_Read(&AS561);
-          Obs_Speed[1] = Speed_Update1(Mech_Angle[1]);
-          KalmanFilter1D_Speed_Update(&KF_Speed1,Obs_Speed[1]);
-          M1.Actual = KF_Speed1.Speed_Hat;
-          PID_Update_Add(&M1,0.0005);
-          uq[1] = M1.Out;
-          Elec_Angle[1] = Elec_Angle_Set(Mech_Angle[1]);
-          SimpleFOC(0,uq[1],Elec_Angle[1],&duty1[1],&duty2[1],&duty3[1]);
-          
-          Mech_Angle[2] = AS5600_Read(&AS562);
-          Obs_Speed[2] = Speed_Update2(Mech_Angle[2]);
-          KalmanFilter1D_Speed_Update(&KF_Speed2,Obs_Speed[2]);
-          M2.Actual = KF_Speed2.Speed_Hat;   
-          PID_Update_Add(&M2,0.0005);         
-          uq[2] = -M2.Out;
-          Elec_Angle[2] = Elec_Angle_Set(Mech_Angle[2]);
-          SimpleFOC(0,uq[2],Elec_Angle[2],&duty1[2],&duty2[2],&duty3[2]);
-          
-          FOC_pwm_set_duty(duty1[1],duty2[1],duty3[1],1);
-          FOC_pwm_set_duty(duty1[2],duty2[2],duty3[2],2);
-          
-          //printf("%.2f,%.2f,%.2f\n",M1.Target,M1.Actual,M1.Out);
-          printf("%.2f,%.2f,%.2f\n",M2.Target,M2.Actual,M2.Out);
-          
+        if(BlueTooth >= 1000){
+          BlueTooth = 0;
+           data_len = (uint8)wireless_uart_read_buffer(data_buffer,32);             // 查看是否有消息 默认缓冲区是 WIRELESS_UART_BUFFER_SIZE 总共 64 字节
+          if(data_len != 0)                                                       // 收到了消息 读取函数会返回实际读取到的数据个数
+          {
+            
+             char temp[2][6];  
+              int i = 0, j = 0;
+              for (i = 0; (i < 5) && (10 + i < data_len) && data_buffer[10 + i] != ','; i++) {
+                  temp[0][i] = (char)data_buffer[10 + i];
+              }
+              temp[0][i] = '\0';  
+              for (j = 0; (j < 5) && (11 + i + j < data_len) && data_buffer[11 + i + j] != ','; j++) {
+                  temp[1][j] = (char)data_buffer[11 + i + j];
+              }
+              temp[1][j] = '\0';  
+    
+             turn_speed = atoi(temp[0]);
+             forward_speed = atoi(temp[1]);
+
+            memset(data_buffer, 0, 32);
+            
+          }
         }
         
-        
-          
-          
-          
-          
-          
-          
-          
-          
+        if(IMUcounter >= 10){
+            KalmanFilter1D_Speed_Update(&FORWARD,(forward_speed / 15.0));
+            KalmanFilter1D_Speed_Update(&TURN,(turn_speed / 50.0));
+           _Speed.Target = FORWARD.Speed_Hat;
+           _Dir.Target = TURN.Speed_Hat;
             
+           printf("%.2f,%.2f\r\n",_Speed.Target,_Dir.Target);
+           IMUcounter = 0;
+           _Speed.Actual = (L_Speed + R_Speed) / 2;
+           PID_Update_Pos(&_Speed);
+           
+           _Dir.Actual = L_Speed - R_Speed;
+           _Dir.Actual = _Dir.Actual < (_Dir.Target - 1) ? _Dir.Actual : (_Dir.Actual > (_Dir.Target + 1) ? _Dir.Actual : _Dir.Target);
+           PID_Update_Pos(&_Dir);
+           
+           
+           _Angle.Target = BaseAngle - _Speed.Out;
+           _Angle.Actual = Roll;
+           PID_Update_Pos(&_Angle);
+           
+           _Angle_Speed.Target =  0.1 * _Angle.Out + 0.9 * _Angle_Speed.Target ;
+           _Angle_Speed.Actual = X_gyro;
+           PID_Update_Pos(&_Angle_Speed);
+           
+           
+           //oled_show_float(0,0,Roll,3,2);
+           //oled_show_float(0,2,_Angle.Target,3,2);
+           //oled_show_float(0,4,_Angle.Out,3,2);
+           //oled_show_float(0,6,_Angle_Speed.Out,3,2);
+           //printf("%.2f,%.2f,%.2f\r\n",M1.Target,M1.Actual,M1.Out);
+           system_delay_us(1500); 
           
+           
+        }
+        
+        if(FOCcounter >= 5){
+          FOCcounter = 0;
+
+          Motor_SpeedSet(&M1,1,(_Angle_Speed.Out + 2 * _Dir.Out ) * 7.5 );
+          Motor_SpeedSet(&M2,2,(_Angle_Speed.Out - 2 * _Dir.Out) * 7.5 );
+         
+          
+          //printf("%.2f,%.2f,%.2f\n",M1.Target,M1.Actual,M1.Out);
+          //printf("%.2f,%.2f,%.2f\n",M2.Target,M2.Actual,M2.Out);
+          //printf("%.2f,%.2f,%.2f\r\n",Roll,Pitch,-Yaw);
+          
+        }
         
         
         
@@ -200,6 +339,9 @@ int main(void)
         // 此处编写需要循环执行的代码
     }
 }
+
+
+
 
 // **************************** 代码区域 ****************************
 

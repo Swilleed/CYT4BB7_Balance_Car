@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "D:\IAR\common\bin\cspybat" -f "C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo - 1\iar\project_config\settings\cyt4bb7_cm_7_0.Debug.general.xcl" --backend -f "C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo - 1\iar\project_config\settings\cyt4bb7_cm_7_0.Debug.driver.xcl" 
+& "D:\IAR\common\bin\cspybat" -f "C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\settings\cyt4bb7_cm_7_0.Debug.general.xcl" --backend -f "C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\settings\cyt4bb7_cm_7_0.Debug.driver.xcl" 
 }
 else
 {
-& "D:\IAR\common\bin\cspybat" -f "C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo - 1\iar\project_config\settings\cyt4bb7_cm_7_0.Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo - 1\iar\project_config\settings\cyt4bb7_cm_7_0.Debug.driver.xcl" 
+& "D:\IAR\common\bin\cspybat" -f "C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\settings\cyt4bb7_cm_7_0.Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\settings\cyt4bb7_cm_7_0.Debug.driver.xcl" 
 }
