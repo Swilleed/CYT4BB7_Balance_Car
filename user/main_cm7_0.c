@@ -153,7 +153,7 @@ PID_TypeDef _Angle_Speed = {
 	
 };
 
-float BaseAngle = 0.6;
+float BaseAngle = 1.065;
 PID_TypeDef _Angle = {
 	
 	.error0 = 0,
@@ -181,7 +181,7 @@ PID_TypeDef _Speed = {
 	
 	.Kp = 1.2,
 	.Ki = -0.01,
-	.Kd = 2.5,
+	.Kd = 3.0,
 	
 	.OutMax = 6,
 	.OutMin = -6,
