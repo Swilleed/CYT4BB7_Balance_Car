@@ -2,12 +2,12 @@
 #define __MENU_H
 
 #include <stdint.h>
-#define MENU_MAX_CHILDREN 4
+#define MENU_MAX_CHILDREN 8  //4
 
-#define KEY_UP KEY_1
-#define KEY_DOWN KEY_2
+#define KEY_UP     KEY_1
+#define KEY_DOWN   KEY_2
 #define KEY_SELECT KEY_3
-#define KEY_BACK KEY_4
+#define KEY_BACK   KEY_4
 
 typedef struct menu
 {
