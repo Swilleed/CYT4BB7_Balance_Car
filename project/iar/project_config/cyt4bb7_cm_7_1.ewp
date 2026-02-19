@@ -374,6 +374,9 @@
                     <state>$PROJ_DIR$\..\..\..\libraries\zf_components</state>
                     <state>$PROJ_DIR$\..\..\user</state>
                     <state>$PROJ_DIR$\..\..\code</state>
+                    <state>$PROJ_DIR$\..\..\code\Algorithm</state>
+                    <state>$PROJ_DIR$\..\..\code\Apps</state>
+                    <state>$PROJ_DIR$\..\..\code\Drivers</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1115,6 +1118,27 @@
     </configuration>
     <group>
         <name>code</name>
+        <group>
+            <name>Algorithm</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\KF.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\KF.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\Madgwick.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\Madgwick.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\PID.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\PID.h</name>
+            </file>
+        </group>
         <file>
             <name>$PROJ_DIR$\..\..\code\本文件夹作用.txt</name>
         </file>

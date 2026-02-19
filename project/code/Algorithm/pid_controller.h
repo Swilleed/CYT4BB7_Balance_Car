@@ -14,9 +14,9 @@ typedef struct
     float Output;      // 输出值
     float OutputMax;   // 输出限幅
     float OutputMin;
-} PID_TypeDef;
+} pid_controller_t;
 
-void PID_Init(PID_TypeDef *pid, float kp, float ki, float kd, float output_min, float output_max);
-float PID_Calculate(PID_TypeDef *pid, float target, float actual);
+void PID_Init(pid_controller_t *pid, float kp, float ki, float kd, float output_min, float output_max);
+float PID_Calculate(pid_controller_t *pid, float target, float actual);
 
 #endif // __PID_CONTROLLER_H__

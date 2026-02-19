@@ -9,7 +9,7 @@
  * @param output_min 输出最小值
  * @param output_max 输出最大值
  */
-void PID_Init(PID_TypeDef *pid, float kp, float ki, float kd, float output_min, float output_max)
+void PID_Init(pid_controller_t *pid, float kp, float ki, float kd, float output_min, float output_max)
 {
     pid->Err = 0.0f;
     pid->Err_Last = 0.0f;
@@ -30,7 +30,7 @@ void PID_Init(PID_TypeDef *pid, float kp, float ki, float kd, float output_min, 
  * @param actual 实际值
  * @return PID输出值
  */
-float PID_Calculate(PID_TypeDef *pid, float target, float actual)
+float PID_Calculate(pid_controller_t *pid, float target, float actual)
 {
     pid->TargetValue = target;
     pid->ActualValue = actual;
@@ -70,7 +70,7 @@ float PID_Calculate(PID_TypeDef *pid, float target, float actual)
  * @param actual_angular_velocity 实际角速度
  * @return 最终PID输出值
  */
-float PID_Balance_Calculate(PID_TypeDef *outer_pid, PID_TypeDef *inner_pid,
+float PID_Balance_Calculate(pid_controller_t *outer_pid, pid_controller_t *inner_pid,
                             float target_angle, float actual_angle,
                             float actual_angular_velocity)
 {

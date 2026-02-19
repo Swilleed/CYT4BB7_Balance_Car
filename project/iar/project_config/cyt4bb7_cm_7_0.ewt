@@ -1437,16 +1437,34 @@
                 <name>$PROJ_DIR$\..\..\code\Algorithm\attitude_solution.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\KF.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\KF.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\code\Algorithm\line_following.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\code\Algorithm\line_following.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\Madgwick.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\Madgwick.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\code\Algorithm\odometry.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\code\Algorithm\odometry.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\PID.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Algorithm\PID.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\code\Algorithm\pid_controller.c</name>
@@ -1467,6 +1485,12 @@
                 <name>$PROJ_DIR$\..\..\code\Apps\app.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\code\Apps\balance_task.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Apps\balance_task.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\code\Apps\menu.c</name>
             </file>
             <file>
@@ -1478,14 +1502,32 @@
             <file>
                 <name>$PROJ_DIR$\..\..\code\Apps\path_task.h</name>
             </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Apps\remote_control.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Apps\remote_control.h</name>
+            </file>
         </group>
         <group>
             <name>Drivers</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Drivers\AS5600.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Drivers\AS5600.h</name>
+            </file>
             <file>
                 <name>$PROJ_DIR$\..\..\code\Drivers\flash_logger.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\code\Drivers\flash_logger.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Drivers\FOC.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\code\Drivers\FOC.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\code\Drivers\infrared_sense.c</name>
@@ -1494,10 +1536,10 @@
                 <name>$PROJ_DIR$\..\..\code\Drivers\infrared_sense.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\code\Drivers\motor.c</name>
+                <name>$PROJ_DIR$\..\..\code\Drivers\Motor.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\code\Drivers\motor.h</name>
+                <name>$PROJ_DIR$\..\..\code\Drivers\Motor.h</name>
             </file>
         </group>
         <file>

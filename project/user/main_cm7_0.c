@@ -34,6 +34,8 @@
  ********************************************************************************************************************/
 
 #include "zf_common_headfile.h"
+#include "balance_task.h"
+#include "remote_control.h"
 // 打开新的工程或者工程移动了位置务必执行以下操作
 // 第一步 关闭上面所有打开的文件
 // 第二步 project->clean  等待下方进度条走完
@@ -43,18 +45,56 @@
 // 本例程是开源库空工程 可用作移植或者测试各类内外设
 
 // **************************** 代码区域 ****************************
+uint32_t FOCcounter = 0;
+uint32_t IMUcounter = 0;
+uint32_t BlueTooth = 0;
+soft_iic_info_struct AS561, AS562;
+
+void my_ipc_callback(uint32 receive_data)
+{
+    Balance_Attitude_Update_From_Ipc(receive_data);
+}
+
 int main(void)
 {
+    RemoteControl_Cmd_t remote_cmd;
+
     clock_init(SYSTEM_CLOCK_250M); // 时钟配置及系统初始化<务必保留>
     debug_init();                  // 调试串口信息初始化
-    // 此处编写用户代码 例如外设初始化代码等
-    oled_init(); // OLED 初始化
-    // 此处编写用户代码 例如外设初始化代码等
+    oled_init();
+    wireless_uart_init();
+    system_delay_init();
+
+    SCB_DisableDCache();
+    ipc_communicate_init(IPC_PORT_1, my_ipc_callback);
+
+    pit_init(PIT_CH0, 100);
+    pit_enable(PIT_CH0);
+
+    AS5600_Init(&AS561, 1);
+    AS5600_Init(&AS562, 2);
+    FOC_init();
+
     while (true)
     {
-        // 此处编写需要循环执行的代码
+        Remote_Control_Update();
 
-        // 此处编写需要循环执行的代码
+        if (Remote_Control_GetCmd(&remote_cmd))
+        {
+            Balance_SetMotionCmd(remote_cmd.forward, remote_cmd.turn);
+        }
+
+        if (IMUcounter >= 25)
+        {
+            Balance_Control_Loop();
+            IMUcounter = 0;
+        }
+
+        if (FOCcounter >= 5)
+        {
+            Balance_Foc_Loop();
+            FOCcounter = 0;
+        }
     }
 }
 
