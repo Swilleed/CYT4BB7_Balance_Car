@@ -36,20 +36,16 @@
 #include "zf_common_headfile.h"
 #include "balance_task.h"
 #include "remote_control.h"
-// 打开新的工程或者工程移动了位置务必执行以下操作
-// 第一步 关闭上面所有打开的文件
-// 第二步 project->clean  等待下方进度条走完
 
-// 本例程是开源库空工程 可用作移植或者测试各类内外设
-// 本例程是开源库空工程 可用作移植或者测试各类内外设
-// 本例程是开源库空工程 可用作移植或者测试各类内外设
-
-// **************************** 代码区域 ****************************
 uint32_t FOCcounter = 0;
 uint32_t IMUcounter = 0;
 uint32_t BlueTooth = 0;
 soft_iic_info_struct AS561, AS562;
 
+/**
+ * IPC回调函数，接收来自M7_1的姿态数据并更新小车姿态
+ * @param receive_data 从M7_1发送过来的数据，包含roll、yaw、pitch信息
+ */
 void my_ipc_callback(uint32 receive_data)
 {
     Balance_Attitude_Update_From_Ipc(receive_data);
@@ -68,7 +64,7 @@ int main(void)
     SCB_DisableDCache();
     ipc_communicate_init(IPC_PORT_1, my_ipc_callback);
 
-    pit_init(PIT_CH0, 100);
+    pit_init(PIT_CH0, 100); // 初始化周期定时器，周期为100us
     pit_enable(PIT_CH0);
 
     AS5600_Init(&AS561, 1);
@@ -77,19 +73,22 @@ int main(void)
 
     while (true)
     {
-        Remote_Control_Update();
+        Remote_Control_Update(); // 更新远程控制数据，从无线串口读取数据并解析
 
+        // 获取最新的远程控制命令
         if (Remote_Control_GetCmd(&remote_cmd))
         {
             Balance_SetMotionCmd(remote_cmd.forward, remote_cmd.turn);
         }
 
+        // 每2.5ms执行一次平衡控制循环
         if (IMUcounter >= 25)
         {
             Balance_Control_Loop();
             IMUcounter = 0;
         }
 
+        // 每0.5ms执行一次FOC控制循环
         if (FOCcounter >= 5)
         {
             Balance_Foc_Loop();
@@ -97,5 +96,3 @@ int main(void)
         }
     }
 }
-
-// **************************** 代码区域 ****************************

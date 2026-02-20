@@ -7,6 +7,7 @@
 float Roll, Yaw, Pitch, X_gyro = 0;
 static float Last_Roll = 0;
 
+// 角速度环PID参数
 static PID_TypeDef _Angle_Speed = {
 
     .error0 = 0,
@@ -25,7 +26,9 @@ static PID_TypeDef _Angle_Speed = {
 
 };
 
+// 基准角度
 static float BaseAngle = 1.065;
+// 角度环参数
 static PID_TypeDef _Angle = {
 
     .error0 = 0,
@@ -44,6 +47,7 @@ static PID_TypeDef _Angle = {
 
 };
 
+// 速度环参数
 static float Average_Speed, Delta_Speed, L_Speed, R_Speed;
 static PID_TypeDef _Speed = {
 
@@ -63,6 +67,7 @@ static PID_TypeDef _Speed = {
 
 };
 
+// 方向环参数
 static PID_TypeDef _Dir = {
 
     .error0 = 0,
@@ -81,6 +86,7 @@ static PID_TypeDef _Dir = {
 
 };
 
+// 卡尔曼滤波器参数
 static KalmanFilter1D_Speed X_GYRO = {
     .Speed_Hat = 0.0f,
     .P = 1.0f,
@@ -97,6 +103,7 @@ static KalmanFilter1D_Speed TURN = {
     .Q = 0.0005f,
     .R = 0.5f};
 
+// 电机控制参数
 static int32_t forward_speed = 0, turn_speed = 0;
 static PID_TypeDef M1 = {
 
@@ -133,17 +140,30 @@ static PID_TypeDef M2 = {
 
 };
 
+/**
+ * 设置平衡小车的运动指令
+ * @param forward_cmd 前进速度指令
+ * @param turn_cmd 转向速度指令
+ */
 void Balance_SetMotionCmd(int32_t forward_cmd, int32_t turn_cmd)
 {
     forward_speed = forward_cmd;
     turn_speed = turn_cmd;
 }
 
+/**
+ * 直接设置电机速度（用于远程控制）
+ * @param forward_cmd 前进速度指令
+ * @param turn_cmd 转向速度指令
+ */
 void Balance_Remote_SetSpeed(int32_t forward_cmd, int32_t turn_cmd)
 {
     Balance_SetMotionCmd(forward_cmd, turn_cmd);
 }
 
+/**
+ * 平衡控制主循环，计算PID输出并更新电机速度
+ */
 void Balance_Control_Loop(void)
 {
     KalmanFilter1D_Speed_Update(&FORWARD, (forward_speed / 15.0));
@@ -152,7 +172,6 @@ void Balance_Control_Loop(void)
     _Dir.Target = TURN.Speed_Hat;
 
     printf("%.2f,%.2f\r\n", _Speed.Target, _Dir.Target);
-    IMUcounter = 0;
     _Speed.Actual = (L_Speed + R_Speed) / 2;
     PID_Update_Pos(&_Speed);
 
@@ -169,12 +188,22 @@ void Balance_Control_Loop(void)
     PID_Update_Pos(&_Angle_Speed);
 }
 
+/**
+ * FOC控制主循环，根据角速度PID输出设置电机速度
+ */
 void Balance_Foc_Loop(void)
 {
     Motor_SpeedSet(&M1, 1, (_Angle_Speed.Out + 2 * _Dir.Out) * 7.5f);
     Motor_SpeedSet(&M2, 2, (_Angle_Speed.Out - 2 * _Dir.Out) * 7.5f);
 }
 
+/**
+ * 更新小车姿态信息
+ * @param roll 滚转角
+ * @param yaw 偏航角
+ * @param pitch 俯仰角
+ * 内部函数，外部通过IPC调用Balance_Attitude_Update_From_Ipc更新姿态信息
+ */
 static void Balance_Attitude_Update(float roll, float yaw, float pitch)
 {
     Last_Roll = Roll;
@@ -186,6 +215,10 @@ static void Balance_Attitude_Update(float roll, float yaw, float pitch)
     X_gyro = X_GYRO.Speed_Hat > 25.0f ? 25.0f : (X_GYRO.Speed_Hat < -25.0f ? -25.0f : X_GYRO.Speed_Hat);
 }
 
+/**
+ * IPC回调函数，接收来自M7_1的姿态数据并更新小车姿态
+ * @param receive_data 从M7_1发送过来的数据，包含roll、yaw、pitch信息
+ */
 void Balance_Attitude_Update_From_Ipc(uint32 receive_data)
 {
     static uint8_t frame_idx = 0;

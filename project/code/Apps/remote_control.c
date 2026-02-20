@@ -9,6 +9,13 @@ uint8 data_len;
 static RemoteControl_Cmd_t remote_cmd = {0, 0};
 static uint8_t remote_cmd_updated = 0;
 
+/**
+ * 解析远程控制数据
+ * @param buffer 接收到的数据缓冲区
+ * @param len 数据长度
+ * @param cmd 解析后的控制命令结构体指针
+ * @return 解析成功返回1，失败返回0
+ */
 static uint8_t Remote_Control_Parse(const uint8 *buffer, uint8 len, RemoteControl_Cmd_t *cmd)
 {
     char temp[2][6];
@@ -36,6 +43,9 @@ static uint8_t Remote_Control_Parse(const uint8 *buffer, uint8 len, RemoteContro
     return 1;
 }
 
+/**
+ * 更新远程控制数据，从无线串口读取数据并解析
+ */
 void Remote_Control_Update(void)
 {
     if (BlueTooth >= 1000)
@@ -49,6 +59,10 @@ void Remote_Control_Update(void)
     }
 }
 
+/**
+ * 获取最新的远程控制命令
+ * @param cmd 用于存储获取到的控制命令的结构体指针
+ */
 uint8_t Remote_Control_GetCmd(RemoteControl_Cmd_t *cmd)
 {
     if ((0 == remote_cmd_updated) || (NULL == cmd))
