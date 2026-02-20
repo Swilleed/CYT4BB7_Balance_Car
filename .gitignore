@@ -95,9 +95,11 @@ desktop.ini
 !project/iar/project_config/*.ewd
 !project/iar/project_config/*.ewt
 !project/iar/project_config/*.eww
+!project/iar/project_config/*.ewx
 
 # 排除一些特定的生成文件
 project/iar/project_config/settings/
+!project/iar/project_config/settings/*.dnx
 project/iar/Debug_m7_0/
 project/iar/Debug_m7_1/
 project/iar/project_config/Debug_m7_0/

@@ -9,7 +9,7 @@ float Mech_Angle[3], Elec_Angle[3], Obs_Speed[3] = {0};
 float duty1[3] = {0}, duty2[3] = {0}, duty3[3] = {0};
 float uq[3];
 extern soft_iic_info_struct AS561, AS562;
-extern float L_Speed, R_Speed;
+float L_Speed, R_Speed;
 KalmanFilter1D_Speed KF_Speed1 = {
     .Speed_Hat = 0.0f,
     .P = 1.0f,

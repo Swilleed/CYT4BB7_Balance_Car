@@ -92,7 +92,7 @@
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CLowLevel</name>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>OCImagesUse1</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OCImagesUse2</name>
@@ -328,7 +328,7 @@
                 <option>
                     <name>CMSISDAPResetList</name>
                     <version>1</version>
-                    <state>7</state>
+                    <state>4</state>
                 </option>
                 <option>
                     <name>CMSISDAPHWResetDuration</name>
@@ -465,7 +465,7 @@
                 </option>
                 <option>
                     <name>CMSISDAPProbeConfigRadio</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CMSISDAPSelectedCPUBehaviour</name>
