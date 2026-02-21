@@ -1453,6 +1453,12 @@
             <name>$PROJ_DIR$\..\..\code\Madgwick.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\code\Menu.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Menu.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\code\Motor.c</name>
         </file>
         <file>
@@ -1463,6 +1469,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\PID.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Position.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Position.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\本文件夹作用.txt</name>

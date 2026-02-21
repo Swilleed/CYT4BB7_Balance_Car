@@ -42,6 +42,8 @@
 #include "KF.h"
 #include "Motor.h"
 #include "Madgwick.h"
+#include "Position.h"
+#include "Menu.h"
 // 打开新的工程或者工程移动了位置务必执行以下操作
 // 第一步 关闭上面所有打开的文件
 // 第二步 project->clean  等待下方进度条走完
@@ -77,8 +79,18 @@ uint8 led_state = 0;
 extern uint8_t FOCcounter;
 extern uint8_t IMUcounter;
 extern uint16_t BlueTooth;
+extern uint16_t KeyCounter;
+extern uint16_t OLEDCounter; 
 
 soft_iic_info_struct AS561,AS562;
+
+Position_Data POS = {
+  .X = 0,
+  .Y = 0,
+  .Yaw = 0,
+  
+};
+
 
 KalmanFilter1D_Speed X_GYRO = {
     .Speed_Hat = 0.0f,  
@@ -153,7 +165,7 @@ PID_TypeDef _Angle_Speed = {
 	
 };
 
-float BaseAngle = 1.065;
+float BaseAngle = 0.5;
 PID_TypeDef _Angle = {
 	
 	.error0 = 0,
@@ -172,7 +184,7 @@ PID_TypeDef _Angle = {
 	
 };
 
-float Average_Speed,Delta_Speed,L_Speed,R_Speed;
+float current_speed,L_Speed,R_Speed;
 PID_TypeDef _Speed = {
 	
 	.error0 = 0,
@@ -180,11 +192,11 @@ PID_TypeDef _Speed = {
 	.error2 = 0,
 	
 	.Kp = 1.2,
-	.Ki = -0.01,
-	.Kd = 3.0,
+	.Ki = 0.0008,
+	.Kd = 2.5,
 	
-	.OutMax = 6,
-	.OutMin = -6,
+	.OutMax = 7,
+	.OutMin = -7,
 	
 	.Target = 0,
 	.Out = 0,
@@ -209,8 +221,28 @@ PID_TypeDef _Dir = {
 	
 };
 
+PID_TypeDef _Pos = {
+	
+	.error0 = 0,
+	.error1 = 0,
+	.error2 = 0,
+	
+	.Kp = 15.0,
+	.Ki = 0.00,
+	.Kd = 40.0,
+	
+	.OutMax = 6,
+	.OutMin = -6,
+	
+	.Target = 0,
+	.Out = 0,
+	
+};
+
+
 uint8 data_buffer[32];
 uint8 data_len;
+
 
 void my_ipc_callback(uint32 receive_data)
 {
@@ -241,7 +273,8 @@ int main(void)
     debug_init();                          // 调试串口信息初始化
     oled_init();
     wireless_uart_init();
-    system_delay_init(); 
+    key_init(10);
+    Menu_Init();
     
     SCB_DisableDCache(); 
     ipc_communicate_init(IPC_PORT_1, my_ipc_callback);
@@ -257,6 +290,15 @@ int main(void)
     
     while(true)
     {
+        if(KeyCounter >= 100){
+          KeyCounter = 0;
+          Key_Scanner();
+        }
+        if(OLEDCounter >= 500){
+          OLEDCounter = 0;
+           OLED_ShowMenu(); 
+        }
+      
         if(BlueTooth >= 1000){
           BlueTooth = 0;
            data_len = (uint8)wireless_uart_read_buffer(data_buffer,32);             // 查看是否有消息 默认缓冲区是 WIRELESS_UART_BUFFER_SIZE 总共 64 字节
@@ -283,20 +325,28 @@ int main(void)
         }
         
         if(IMUcounter >= 10){
-            KalmanFilter1D_Speed_Update(&FORWARD,(forward_speed / 15.0));
-            KalmanFilter1D_Speed_Update(&TURN,(turn_speed / 50.0));
-           _Speed.Target = FORWARD.Speed_Hat;
-           _Dir.Target = TURN.Speed_Hat;
+            IMUcounter = 0;
             
-           printf("%.2f,%.2f\r\n",_Speed.Target,_Dir.Target);
-           IMUcounter = 0;
-           _Speed.Actual = (L_Speed + R_Speed) / 2;
+            current_speed = (L_Speed + R_Speed) / 2;
+            Position_cal(&POS,Yaw,current_speed * 3 / 7,0.001);
+            _Pos.Actual = POS.Y;
+            PID_Update_Pos(&_Pos);
+
+            if(Mission == 5){
+              KalmanFilter1D_Speed_Update(&FORWARD,(forward_speed / 15.0));
+              KalmanFilter1D_Speed_Update(&TURN,(turn_speed / 50.0));
+            
+              _Speed.Target = FORWARD.Speed_Hat;
+              _Dir.Target = TURN.Speed_Hat;    
+            }
+            
+           _Speed.Target = _Pos.Out;
+           _Speed.Actual = current_speed;
            PID_Update_Pos(&_Speed);
            
            _Dir.Actual = L_Speed - R_Speed;
            _Dir.Actual = _Dir.Actual < (_Dir.Target - 1) ? _Dir.Actual : (_Dir.Actual > (_Dir.Target + 1) ? _Dir.Actual : _Dir.Target);
            PID_Update_Pos(&_Dir);
-           
            
            _Angle.Target = BaseAngle - _Speed.Out;
            _Angle.Actual = Roll;
@@ -305,15 +355,13 @@ int main(void)
            _Angle_Speed.Target =  0.1 * _Angle.Out + 0.9 * _Angle_Speed.Target ;
            _Angle_Speed.Actual = X_gyro;
            PID_Update_Pos(&_Angle_Speed);
+           oled_show_float(64,6,_Angle_Speed.Out,3,2);
+           oled_show_float(64,7,_Pos.Out,3,2);
            
+           printf("%.2f,%.2f,%.2f\r\n",POS.X,POS.Y,POS.Yaw);
+           system_delay_us(2100); 
            
-           //oled_show_float(0,0,Roll,3,2);
-           //oled_show_float(0,2,_Angle.Target,3,2);
-           //oled_show_float(0,4,_Angle.Out,3,2);
-           //oled_show_float(0,6,_Angle_Speed.Out,3,2);
-           //printf("%.2f,%.2f,%.2f\r\n",M1.Target,M1.Actual,M1.Out);
-           system_delay_us(1500); 
-          
+         
            
         }
         
@@ -321,13 +369,15 @@ int main(void)
           FOCcounter = 0;
 
           Motor_SpeedSet(&M1,1,(_Angle_Speed.Out + 2 * _Dir.Out ) * 7.5 );
-          Motor_SpeedSet(&M2,2,(_Angle_Speed.Out - 2 * _Dir.Out) * 7.5 );
+          Motor_SpeedSet(&M2,2,(_Angle_Speed.Out - 2 * _Dir.Out ) * 7.5 );
          
+          //Motor_SpeedSet(&M2,2,forward_speed);
           
           //printf("%.2f,%.2f,%.2f\n",M1.Target,M1.Actual,M1.Out);
           //printf("%.2f,%.2f,%.2f\n",M2.Target,M2.Actual,M2.Out);
           //printf("%.2f,%.2f,%.2f\r\n",Roll,Pitch,-Yaw);
           
+          system_delay_us(1400); 
         }
         
         

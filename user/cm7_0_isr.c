@@ -39,7 +39,8 @@
 uint8_t FOCcounter = 0;
 uint8_t IMUcounter = 0;
 uint16_t BlueTooth = 0;
-
+uint16_t KeyCounter = 0;
+uint16_t OLEDCounter = 0;
 
 // **************************** PIT中断函数 ****************************
 void pit0_ch0_isr()                     // 定时器通道 0 周期中断服务函数      
@@ -48,7 +49,8 @@ void pit0_ch0_isr()                     // 定时器通道 0 周期中断服务函数
     FOCcounter ++;
     IMUcounter ++;
     BlueTooth ++;
-   
+    KeyCounter ++;  
+    OLEDCounter ++;
 }
 
 void pit0_ch1_isr()                     // 定时器通道 1 周期中断服务函数      

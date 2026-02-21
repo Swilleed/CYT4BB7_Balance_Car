@@ -107,3 +107,4 @@ float Madgwick_QuatToYaw(MadgwickFilter *mf) {
     return atan2f(2.0f*(mf->q1*mf->q2 + mf->q0*mf->q3), mf->q0*mf->q0 + mf->q1*mf->q1 - mf->q2*mf->q2 - mf->q3*mf->q3);
 }
 
+

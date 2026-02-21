@@ -113,7 +113,7 @@ int main(void)
 {
     clock_init(SYSTEM_CLOCK_250M); 	// 时钟配置及系统初始化<务必保留>
     debug_init();                          // 调试串口信息初始化
-    imu660ra_init();
+    
     
     SCB_DisableDCache(); 
     ipc_communicate_init(IPC_PORT_2, my_ipc_callback);
@@ -181,7 +181,7 @@ int main(void)
 
 void Solve_Angle(void)
 {
-  float dt = 0.00093;
+  float dt = 0.00098;
 			
   float dX = imu660ra_gyro_x / 32768.0  * 2000,dY = imu660ra_gyro_y / 32768.0  * 2000,dZ = imu660ra_gyro_z / 32768.0  * 2000;
 		
@@ -198,10 +198,14 @@ void Solve_Angle(void)
   Pitch = Madgwick_QuatToPitch(&MF) * 180 /3.14159;
   Roll = Madgwick_QuatToRoll(&MF) * 180 /3.14159;
 		
-		
   KalmanFilter1D_Update(&X,dX,Roll,dt);
   KalmanFilter1D_Update(&Y,dY,Pitch,dt);
   KalmanFilter1D_Update(&Z,dZ,Yaw,dt);
+  
+  Roll = X.Angle_Hat;
+  Pitch = Y.Angle_Hat;
+  Yaw = Z.Angle_Hat;
+  
   
 }
 
