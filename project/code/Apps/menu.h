@@ -2,7 +2,7 @@
 #define __MENU_H
 
 #include <stdint.h>
-#define MENU_MAX_CHILDREN 4
+#define MENU_MAX_CHILDREN 8
 
 #define KEY_UP KEY_1
 #define KEY_DOWN KEY_2
