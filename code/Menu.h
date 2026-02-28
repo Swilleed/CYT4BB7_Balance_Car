@@ -24,6 +24,7 @@ typedef struct {
 } Menu;
 
 extern uint8_t Mission;
+extern uint8_t Save_State;
 extern int8_t menuIndex,itemIndex,mode;
 
 void Menu_Init(void);

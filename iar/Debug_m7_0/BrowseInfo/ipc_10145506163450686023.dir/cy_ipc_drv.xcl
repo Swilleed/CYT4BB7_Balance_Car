@@ -1,53 +1,53 @@
-"C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\common\src\drivers\ipc\cy_ipc_drv.c"
+"D:\IAR\IAR project\libraries\sdk\common\src\drivers\ipc\cy_ipc_drv.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -funsigned-char
 -MD
 -MF
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\Debug_m7_0\BrowseInfo\ipc_10145506163450686023.dir\cy_ipc_drv.pbi.dep
+D:\IAR\IAR project\Balance_Car\iar\Debug_m7_0\BrowseInfo\ipc_10145506163450686023.dir\cy_ipc_drv.pbi.dep
 -o
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\Debug_m7_0\BrowseInfo\ipc_10145506163450686023.dir\cy_ipc_drv.pbi
+D:\IAR\IAR project\Balance_Car\iar\Debug_m7_0\BrowseInfo\ipc_10145506163450686023.dir\cy_ipc_drv.pbi
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\common\src\drivers\ipc
+D:\IAR\IAR project\libraries\sdk\common\src\drivers\ipc
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\common\hdr
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\common\hdr\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\common\hdr\cmsis\include
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\common\hdr\cmsis\include\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\common\src\drivers
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\common\src\drivers\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\common\src\mw
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\common\src\mw\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\tviibh4m\hdr
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\tviibh4m\hdr\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\tviibh4m\hdr\ip
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\tviibh4m\hdr\ip\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\tviibh4m\hdr\mcureg
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\tviibh4m\hdr\mcureg\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\tviibh4m\src
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\tviibh4m\src\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\tviibh4m\src\interrupts
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\tviibh4m\src\interrupts\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\tviibh4m\src\mw
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\tviibh4m\src\mw\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\tviibh4m\src\drivers
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\tviibh4m\src\drivers\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\tviibh4m\src\system
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\tviibh4m\src\system\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\sdk\common\hdr\cmsis\dsp
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\sdk\common\hdr\cmsis\dsp\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\zf_common
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\zf_common\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\zf_driver
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\zf_driver\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\zf_device
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\zf_device\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\..\libraries\zf_components
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\..\libraries\zf_components\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\user
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\user\
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\iar\project_config\..\..\code
+D:\IAR\IAR project\Balance_Car\iar\project_config\..\..\code\
 -I
 D:\IAR\arm\inc\c\aarch32
 -I
@@ -55,43 +55,43 @@ D:\IAR\arm\inc
 -I
 D:\IAR\arm\inc\c
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\common\hdr
+D:\IAR\IAR project\libraries\sdk\common\hdr
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\common\hdr\cmsis\include
+D:\IAR\IAR project\libraries\sdk\common\hdr\cmsis\include
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\common\src\drivers
+D:\IAR\IAR project\libraries\sdk\common\src\drivers
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\common\src\mw
+D:\IAR\IAR project\libraries\sdk\common\src\mw
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\tviibh4m\hdr
+D:\IAR\IAR project\libraries\sdk\tviibh4m\hdr
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\tviibh4m\hdr\ip
+D:\IAR\IAR project\libraries\sdk\tviibh4m\hdr\ip
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\tviibh4m\hdr\mcureg
+D:\IAR\IAR project\libraries\sdk\tviibh4m\hdr\mcureg
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\tviibh4m\src
+D:\IAR\IAR project\libraries\sdk\tviibh4m\src
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\tviibh4m\src\interrupts
+D:\IAR\IAR project\libraries\sdk\tviibh4m\src\interrupts
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\tviibh4m\src\mw
+D:\IAR\IAR project\libraries\sdk\tviibh4m\src\mw
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\tviibh4m\src\drivers
+D:\IAR\IAR project\libraries\sdk\tviibh4m\src\drivers
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\tviibh4m\src\system
+D:\IAR\IAR project\libraries\sdk\tviibh4m\src\system
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\sdk\common\hdr\cmsis\dsp
+D:\IAR\IAR project\libraries\sdk\common\hdr\cmsis\dsp
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\zf_common
+D:\IAR\IAR project\libraries\zf_common
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\zf_driver
+D:\IAR\IAR project\libraries\zf_driver
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\zf_device
+D:\IAR\IAR project\libraries\zf_device
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\libraries\zf_components
+D:\IAR\IAR project\libraries\zf_components
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\user
+D:\IAR\IAR project\Balance_Car\user
 -I
-C:\Users\wangzuohao\Desktop\ASC寒假集训\CYT4BB7_Library-master\Example\Coreboard_Demo\E01_gpio_demo-1\code
+D:\IAR\IAR project\Balance_Car\code
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0

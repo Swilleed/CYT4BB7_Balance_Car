@@ -4,7 +4,6 @@
 
 float last_speed = 0;
 
-
 void Position_cal(Position_Data *pos,float Yaw,float current_speed,float dt)
 {
   float Yaw_rad = Yaw * 3.141592f / 180;
@@ -16,5 +15,4 @@ void Position_cal(Position_Data *pos,float Yaw,float current_speed,float dt)
   pos -> Yaw = Yaw;
   
 }
-
 

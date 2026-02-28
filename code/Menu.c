@@ -5,6 +5,7 @@
 #include "zf_device_key.h"
 Menu menu[6];
 uint8_t Mission;
+uint8_t Save_State = 0;
 void A(void){
   if(!Mission){Mission = 1;}
   else {Mission = 0;}
@@ -28,11 +29,9 @@ void E(void){
 void Flash(void){
   
 }
-void Start(void){
-  
-}
+
 void Save(void){
-  
+   Save_State = !Save_State;
 }
 
 void Menu_Init(void)
@@ -66,7 +65,7 @@ void Menu_Init(void)
     menu[0].item[4].type = submenu;
     menu[0].item[4].value = 0;
     menu[0].item[4].subIndex = 5;
-    menu[0].item[4].function = D;
+    menu[0].item[4].function = NULL;
     strcpy(menu[0].item[5].name, "E");
     menu[0].item[5].type = function;
     menu[0].item[5].value = 0;
@@ -171,7 +170,7 @@ void Menu_Init(void)
     menu[5].item[0].type = function;
     menu[5].item[0].value = 0;
     menu[5].item[0].subIndex = -1;
-    menu[5].item[0].function = Start;
+    menu[5].item[0].function = D;
     strcpy(menu[5].item[1].name, "Save");
     menu[5].item[1].type = function;
     menu[5].item[1].value = 0;
@@ -184,7 +183,7 @@ int8_t menuIndex = 0,itemIndex = 0,mode = 0;
 void OLED_ShowMenu(void)
 {   
         
-        if(Mission){oled_show_string(108,0,"!!!");}else{oled_show_string(108,0,"---");}
+        oled_show_int(108,0,Mission,1);
 	oled_show_string(0,0,menu[menuIndex].title);
 	for(int16_t i = 0;i < menu[menuIndex].count;i++)
 	{

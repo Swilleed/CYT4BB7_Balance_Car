@@ -121,6 +121,7 @@ int main(void)
     gpio_init(LED1, GPO, GPIO_HIGH, GPO_PUSH_PULL);                             // 初始化 LED1 输出 默认高电平 推挽输出模式
     pit_init(PIT_CH0,100);
     pit_enable(PIT_CH0);
+    system_delay_ms(600);
     
     while(1)
     {
