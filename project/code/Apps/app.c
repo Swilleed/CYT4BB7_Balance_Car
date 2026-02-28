@@ -6,6 +6,7 @@
 #include "odometry.h"
 
 #define APP_TICK_SEC (0.02f)
+#define APP_ODOM_SPEED_SCALE (1.0f)
 
 // =========================
 // 预留功能（暂不启用，全部注释）
@@ -30,6 +31,8 @@
 // =========================
 
 static AppModeState_enum app_mode_state = APP_MODE_REMOTE;
+static float app_left_odom_residual = 0.0f;
+static float app_right_odom_residual = 0.0f;
 
 extern float Yaw;
 extern float L_Speed;
@@ -47,16 +50,21 @@ extern float R_Speed;
  */
 static void App_UpdateOdometryFromSpeed(void)
 {
+    float left_diff_f = 0.0f;
+    float right_diff_f = 0.0f;
     int16 left_diff = 0;
     int16 right_diff = 0;
 
-    left_diff = (int16)(L_Speed * APP_TICK_SEC);
-    right_diff = (int16)(R_Speed * APP_TICK_SEC);
+    left_diff_f = (L_Speed * APP_TICK_SEC * APP_ODOM_SPEED_SCALE) + app_left_odom_residual;
+    right_diff_f = (R_Speed * APP_TICK_SEC * APP_ODOM_SPEED_SCALE) + app_right_odom_residual;
+
+    left_diff = (int16)(left_diff_f);
+    right_diff = (int16)(right_diff_f);
+
+    app_left_odom_residual = left_diff_f - (float)left_diff;
+    app_right_odom_residual = right_diff_f - (float)right_diff;
 
     Odometry_Update(left_diff, right_diff, Yaw);
-
-    // TODO: L_Speed/R_Speed 单位与 Odometry_Update 的脉冲单位可能不一致。
-    // 后续可在此处增加比例系数做标定，当前先保证示教状态机闭环可运行。
 }
 
 /**

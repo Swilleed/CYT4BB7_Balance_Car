@@ -40,6 +40,9 @@
 #include "AS5600.h"
 #include "FOC.h"
 
+extern void AS5600_Init(soft_iic_info_struct *AS560, uint8_t N);
+extern void FOC_init(void);
+
 uint32_t FOCcounter = 0;
 uint32_t IMUcounter = 0;
 uint32_t BlueTooth = 0;

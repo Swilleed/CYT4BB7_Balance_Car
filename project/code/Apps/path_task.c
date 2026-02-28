@@ -41,7 +41,10 @@
 PathState_enum path_state = PATH_IDLE;
 uint16 path_node_count = 0;
 static uint16 playback_index = 0;
+static uint16 playback_stall_ticks = 0;
 static PathNode_t path_buffer[MAX_PATH_NODES];
+
+#define PATH_PLAYBACK_STALL_TICKS (250u)
 
 typedef struct
 {
@@ -155,6 +158,7 @@ void Path_Start_Playback(void)
     Logger_ReadBlock(Path_DataStartPage(), (void *)path_buffer, (uint32)(path_node_count * sizeof(PathNode_t)));
 
     playback_index = 0;
+    playback_stall_ticks = 0;
     Odometry_Reset();
     path_state = PATH_PLAYBACK;
 }
@@ -226,5 +230,19 @@ void Path_Playback_Tick(void)
     if (Balance_Chase_Position(target->x, target->y, target->yaw))
     {
         playback_index++;
+        playback_stall_ticks = 0;
+    }
+    else
+    {
+        if (playback_stall_ticks < 0xFFFFu)
+        {
+            playback_stall_ticks++;
+        }
+
+        if (playback_stall_ticks >= PATH_PLAYBACK_STALL_TICKS)
+        {
+            Balance_SetMotionCmd(0, 0);
+            Path_Stop_Playback();
+        }
     }
 }
