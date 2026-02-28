@@ -1,4 +1,4 @@
-ï»¿#include "zf_common_headfile.h"
+#include "zf_common_headfile.h"
 #include "PID.h"
 #include "balance_task.h"
 #include "KF.h"
@@ -13,15 +13,15 @@
 #define CHASE_REACH_DIST (8.0f)
 
 /**
- * æµ®ç‚¹é™å¹…å·¥å…·å‡½æ•°
- * @param value å¾…é™å¹…å€¼
- * @param min_v ä¸‹é™
- * @param max_v ä¸Šé™
- * @return é™å¹…åçš„å€¼
- * ä¸ºä»€ä¹ˆè¿™æ ·å†™ï¼šè¿½é€æ§åˆ¶ä¸­éœ€è¦ç»Ÿä¸€é™åˆ¶å‰è¿›/è½¬å‘æŒ‡ä»¤ï¼Œé¿å…æŒ‡ä»¤çªå˜å¯¼è‡´å§¿æ€ç¯è¿‡å†²ã€‚
- * æ€ä¹ˆå®ç°ï¼šè‹¥ value å°äºä¸‹é™è¿”å›ä¸‹é™ï¼Œè‹¥å¤§äºä¸Šé™è¿”å›ä¸Šé™ï¼Œå¦åˆ™åŸæ ·è¿”å›ã€‚
- * æ€ä¹ˆè°ƒç”¨ï¼šä»…åœ¨æœ¬æ–‡ä»¶å†…éƒ¨ç”± Balance_Chase_Position è°ƒç”¨ã€‚
- * å¯¹åº”æ•ˆæœï¼šæ‰€æœ‰è¿½é€æ§åˆ¶è¾“å‡ºéƒ½è¢«çº¦æŸåœ¨å®‰å…¨èŒƒå›´å†…ï¼Œè¿åŠ¨æ›´å¹³æ»‘å¯æ§ã€‚
+ * ¸¡µãÏŞ·ù¹¤¾ßº¯Êı
+ * @param value ´ıÏŞ·ùÖµ
+ * @param min_v ÏÂÏŞ
+ * @param max_v ÉÏÏŞ
+ * @return ÏŞ·ùºóµÄÖµ
+ * ÎªÊ²Ã´ÕâÑùĞ´£º×·Öğ¿ØÖÆÖĞĞèÒªÍ³Ò»ÏŞÖÆÇ°½ø/×ªÏòÖ¸Áî£¬±ÜÃâÖ¸ÁîÍ»±äµ¼ÖÂ×ËÌ¬»·¹ı³å¡£
+ * ÔõÃ´ÊµÏÖ£ºÈô value Ğ¡ÓÚÏÂÏŞ·µ»ØÏÂÏŞ£¬Èô´óÓÚÉÏÏŞ·µ»ØÉÏÏŞ£¬·ñÔòÔ­Ñù·µ»Ø¡£
+ * ÔõÃ´µ÷ÓÃ£º½öÔÚ±¾ÎÄ¼şÄÚ²¿ÓÉ Balance_Chase_Position µ÷ÓÃ¡£
+ * ¶ÔÓ¦Ğ§¹û£ºËùÓĞ×·Öğ¿ØÖÆÊä³ö¶¼±»Ô¼ÊøÔÚ°²È«·¶Î§ÄÚ£¬ÔË¶¯¸üÆ½»¬¿É¿Ø¡£
  */
 static float Balance_Clampf(float value, float min_v, float max_v)
 {
@@ -37,13 +37,13 @@ static float Balance_Clampf(float value, float min_v, float max_v)
 }
 
 /**
- * è§’åº¦å½’ä¸€åŒ–å‡½æ•°ï¼ˆè§’åº¦åˆ¶ï¼‰
- * @param angle_deg è¾“å…¥è§’åº¦ï¼ˆå•ä½ï¼šåº¦ï¼‰
- * @return å½’ä¸€åŒ–åçš„è§’åº¦ï¼ŒèŒƒå›´ [-180, 180] åº¦
- * ä¸ºä»€ä¹ˆè¿™æ ·å†™ï¼šç›®æ ‡è§’ä¸å½“å‰è§’ç›´æ¥ç›¸å‡å¯èƒ½è·¨è¶Š Â±180Â° è¾¹ç•Œï¼Œå¯¼è‡´è½¬å‘æ–¹å‘é”™è¯¯ã€‚
- * æ€ä¹ˆå®ç°ï¼šå¾ªç¯åŠ å‡ 360Â°ï¼Œå°†ç»“æœå‹åˆ° [-180, 180] åŒºé—´ã€‚
- * æ€ä¹ˆè°ƒç”¨ï¼šä»…åœ¨æœ¬æ–‡ä»¶å†…éƒ¨ç”± Balance_Chase_Position è®¡ç®—èˆªå‘è¯¯å·®æ—¶è°ƒç”¨ã€‚
- * å¯¹åº”æ•ˆæœï¼šå°è½¦æ€»æ˜¯æŒ‰æœ€çŸ­è§’åº¦æ–¹å‘è½¬å‘ï¼Œå‡å°‘åŸåœ°å¤§å¹…ç»•è½¬ã€‚
+ * ½Ç¶È¹éÒ»»¯º¯Êı£¨½Ç¶ÈÖÆ£©
+ * @param angle_deg ÊäÈë½Ç¶È£¨µ¥Î»£º¶È£©
+ * @return ¹éÒ»»¯ºóµÄ½Ç¶È£¬·¶Î§ [-180, 180] ¶È
+ * ÎªÊ²Ã´ÕâÑùĞ´£ºÄ¿±ê½ÇÓëµ±Ç°½ÇÖ±½ÓÏà¼õ¿ÉÄÜ¿çÔ½ ¡À180¡ã ±ß½ç£¬µ¼ÖÂ×ªÏò·½Ïò´íÎó¡£
+ * ÔõÃ´ÊµÏÖ£ºÑ­»·¼Ó¼õ 360¡ã£¬½«½á¹ûÑ¹µ½ [-180, 180] Çø¼ä¡£
+ * ÔõÃ´µ÷ÓÃ£º½öÔÚ±¾ÎÄ¼şÄÚ²¿ÓÉ Balance_Chase_Position ¼ÆËãº½ÏòÎó²îÊ±µ÷ÓÃ¡£
+ * ¶ÔÓ¦Ğ§¹û£ºĞ¡³µ×ÜÊÇ°´×î¶Ì½Ç¶È·½Ïò×ªÏò£¬¼õÉÙÔ­µØ´ó·ùÈÆ×ª¡£
  */
 static float Balance_NormalizeAngleDeg(float angle_deg)
 {
@@ -61,7 +61,7 @@ static float Balance_NormalizeAngleDeg(float angle_deg)
 float Roll, Yaw, Pitch, X_gyro = 0;
 static float Last_Roll = 0;
 
-// è§’é€Ÿåº¦ç¯PIDå‚æ•°
+// ½ÇËÙ¶È»·PID²ÎÊı
 static PID_TypeDef _Angle_Speed = {
 
     .error0 = 0,
@@ -80,9 +80,9 @@ static PID_TypeDef _Angle_Speed = {
 
 };
 
-// åŸºå‡†è§’åº¦
+// »ù×¼½Ç¶È
 static float BaseAngle = 1.065;
-// è§’åº¦ç¯å‚æ•°
+// ½Ç¶È»·²ÎÊı
 static PID_TypeDef _Angle = {
 
     .error0 = 0,
@@ -101,7 +101,7 @@ static PID_TypeDef _Angle = {
 
 };
 
-// é€Ÿåº¦ç¯å‚æ•°
+// ËÙ¶È»·²ÎÊı
 extern float L_Speed, R_Speed;
 static PID_TypeDef _Speed = {
 
@@ -121,7 +121,7 @@ static PID_TypeDef _Speed = {
 
 };
 
-// æ–¹å‘ç¯å‚æ•°
+// ·½Ïò»·²ÎÊı
 static PID_TypeDef _Dir = {
 
     .error0 = 0,
@@ -140,7 +140,7 @@ static PID_TypeDef _Dir = {
 
 };
 
-// å¡å°”æ›¼æ»¤æ³¢å™¨å‚æ•°
+// ¿¨¶ûÂüÂË²¨Æ÷²ÎÊı
 static KalmanFilter1D_Speed X_GYRO = {
     .Speed_Hat = 0.0f,
     .P = 1.0f,
@@ -157,7 +157,7 @@ static KalmanFilter1D_Speed TURN = {
     .Q = 0.0005f,
     .R = 0.5f};
 
-// ç”µæœºæ§åˆ¶å‚æ•°
+// µç»ú¿ØÖÆ²ÎÊı
 static int32_t forward_speed = 0, turn_speed = 0;
 static PID_TypeDef M1 = {
 
@@ -195,9 +195,9 @@ static PID_TypeDef M2 = {
 };
 
 /**
- * è®¾ç½®å¹³è¡¡å°è½¦çš„è¿åŠ¨æŒ‡ä»¤
- * @param forward_cmd å‰è¿›é€Ÿåº¦æŒ‡ä»¤
- * @param turn_cmd è½¬å‘é€Ÿåº¦æŒ‡ä»¤
+ * ÉèÖÃÆ½ºâĞ¡³µµÄÔË¶¯Ö¸Áî
+ * @param forward_cmd Ç°½øËÙ¶ÈÖ¸Áî
+ * @param turn_cmd ×ªÏòËÙ¶ÈÖ¸Áî
  */
 void Balance_SetMotionCmd(int32_t forward_cmd, int32_t turn_cmd)
 {
@@ -206,9 +206,9 @@ void Balance_SetMotionCmd(int32_t forward_cmd, int32_t turn_cmd)
 }
 
 /**
- * ç›´æ¥è®¾ç½®ç”µæœºé€Ÿåº¦ï¼ˆç”¨äºè¿œç¨‹æ§åˆ¶ï¼‰
- * @param forward_cmd å‰è¿›é€Ÿåº¦æŒ‡ä»¤
- * @param turn_cmd è½¬å‘é€Ÿåº¦æŒ‡ä»¤
+ * Ö±½ÓÉèÖÃµç»úËÙ¶È£¨ÓÃÓÚÔ¶³Ì¿ØÖÆ£©
+ * @param forward_cmd Ç°½øËÙ¶ÈÖ¸Áî
+ * @param turn_cmd ×ªÏòËÙ¶ÈÖ¸Áî
  */
 void Balance_Remote_SetSpeed(int32_t forward_cmd, int32_t turn_cmd)
 {
@@ -216,19 +216,19 @@ void Balance_Remote_SetSpeed(int32_t forward_cmd, int32_t turn_cmd)
 }
 
 /**
- * è¿½é€ç›®æ ‡ä½ç½®å¹¶è¾“å‡ºå¹³è¡¡æ§åˆ¶é€Ÿåº¦æŒ‡ä»¤
- * @param target_x ç›®æ ‡ç‚¹ X åæ ‡ï¼ˆä¸ current_pose.x åŒå•ä½ï¼‰
- * @param target_y ç›®æ ‡ç‚¹ Y åæ ‡ï¼ˆä¸ current_pose.y åŒå•ä½ï¼‰
- * @param target_yaw_rad ç›®æ ‡èˆªå‘è§’ï¼ˆå•ä½ï¼šå¼§åº¦ï¼‰
- * ä¸ºä»€ä¹ˆè¿™æ ·å†™ï¼šæŠŠâ€œè·¯å¾„ç‚¹è¿½é€â€ç»Ÿä¸€æ”¶æ•›åœ¨ balance å±‚ï¼Œé¿å… path/app å±‚é‡å¤æ‹¼é€Ÿåº¦ä¸è½¬å‘é€»è¾‘ã€‚
- * æ€ä¹ˆå®ç°ï¼š
- * 1) è®¡ç®—å½“å‰ä½ç½®åˆ°ç›®æ ‡ç‚¹çš„è·ç¦»è¯¯å·®ï¼›
- * 2) å°†ç›®æ ‡èˆªå‘ä»å¼§åº¦è½¬æˆè§’åº¦ï¼Œå¹¶ä¸å½“å‰ Yaw åšå½’ä¸€åŒ–è¯¯å·®ï¼›
- * 3) è·ç¦»è¯¯å·®ç»æ¯”ä¾‹ç¯å¾—åˆ°å‰è¿›æŒ‡ä»¤ï¼Œèˆªå‘è¯¯å·®ç»æ¯”ä¾‹ç¯å¾—åˆ°è½¬å‘æŒ‡ä»¤ï¼›
- * 4) å¯¹å‰è¿›/è½¬å‘æŒ‡ä»¤åšé™å¹…åè°ƒç”¨ Balance_SetMotionCmd ä¸‹å‘åˆ°åŸå¹³è¡¡æ§åˆ¶é“¾è·¯ï¼›
- * 5) å½“è·ç¦»è¯¯å·®å°äºé˜ˆå€¼æ—¶è¿”å› 1ï¼Œè¡¨ç¤ºâ€œåˆ°ç‚¹â€ã€‚
- * æ€ä¹ˆè°ƒç”¨ï¼šç”± Path_Playback_Tick å‘¨æœŸè°ƒç”¨ï¼Œæ¯ä¸ªè·¯å¾„ç‚¹éƒ½ä¼šè°ƒç”¨ä¸€æ¬¡ç›´åˆ°è¿”å›åˆ°ç‚¹ã€‚
- * å¯¹åº”æ•ˆæœï¼šè·¯å¾„å¤ç°æ—¶å°è½¦ä¼šæŒç»­é€¼è¿‘ç›®æ ‡ç‚¹å¹¶ä¿®æ­£èˆªå‘ï¼Œåˆ°ç‚¹åä¸Šå±‚å†åˆ‡åˆ°ä¸‹ä¸€ä¸ªè·¯å¾„ç‚¹ã€‚
+ * ×·ÖğÄ¿±êÎ»ÖÃ²¢Êä³öÆ½ºâ¿ØÖÆËÙ¶ÈÖ¸Áî
+ * @param target_x Ä¿±êµã X ×ø±ê£¨Óë current_pose.x Í¬µ¥Î»£©
+ * @param target_y Ä¿±êµã Y ×ø±ê£¨Óë current_pose.y Í¬µ¥Î»£©
+ * @param target_yaw_rad Ä¿±êº½Ïò½Ç£¨µ¥Î»£º»¡¶È£©
+ * ÎªÊ²Ã´ÕâÑùĞ´£º°Ñ¡°Â·¾¶µã×·Öğ¡±Í³Ò»ÊÕÁ²ÔÚ balance ²ã£¬±ÜÃâ path/app ²ãÖØ¸´Æ´ËÙ¶ÈÓë×ªÏòÂß¼­¡£
+ * ÔõÃ´ÊµÏÖ£º
+ * 1) ¼ÆËãµ±Ç°Î»ÖÃµ½Ä¿±êµãµÄ¾àÀëÎó²î£»
+ * 2) ½«Ä¿±êº½Ïò´Ó»¡¶È×ª³É½Ç¶È£¬²¢Óëµ±Ç° Yaw ×ö¹éÒ»»¯Îó²î£»
+ * 3) ¾àÀëÎó²î¾­±ÈÀı»·µÃµ½Ç°½øÖ¸Áî£¬º½ÏòÎó²î¾­±ÈÀı»·µÃµ½×ªÏòÖ¸Áî£»
+ * 4) ¶ÔÇ°½ø/×ªÏòÖ¸Áî×öÏŞ·ùºóµ÷ÓÃ Balance_SetMotionCmd ÏÂ·¢µ½Ô­Æ½ºâ¿ØÖÆÁ´Â·£»
+ * 5) µ±¾àÀëÎó²îĞ¡ÓÚãĞÖµÊ±·µ»Ø 1£¬±íÊ¾¡°µ½µã¡±¡£
+ * ÔõÃ´µ÷ÓÃ£ºÓÉ Path_Playback_Tick ÖÜÆÚµ÷ÓÃ£¬Ã¿¸öÂ·¾¶µã¶¼»áµ÷ÓÃÒ»´ÎÖ±µ½·µ»Øµ½µã¡£
+ * ¶ÔÓ¦Ğ§¹û£ºÂ·¾¶¸´ÏÖÊ±Ğ¡³µ»á³ÖĞø±Æ½üÄ¿±êµã²¢ĞŞÕıº½Ïò£¬µ½µãºóÉÏ²ãÔÙÇĞµ½ÏÂÒ»¸öÂ·¾¶µã¡£
  */
 uint8_t Balance_Chase_Position(float target_x, float target_y, float target_yaw_rad)
 {
@@ -254,7 +254,7 @@ uint8_t Balance_Chase_Position(float target_x, float target_y, float target_yaw_
 }
 
 /**
- * å¹³è¡¡æ§åˆ¶ä¸»å¾ªç¯ï¼Œè®¡ç®—PIDè¾“å‡ºå¹¶æ›´æ–°ç”µæœºé€Ÿåº¦
+ * Æ½ºâ¿ØÖÆÖ÷Ñ­»·£¬¼ÆËãPIDÊä³ö²¢¸üĞÂµç»úËÙ¶È
  */
 void Balance_Control_Loop(void)
 {
@@ -281,7 +281,7 @@ void Balance_Control_Loop(void)
 }
 
 /**
- * FOCæ§åˆ¶ä¸»å¾ªç¯ï¼Œæ ¹æ®è§’é€Ÿåº¦PIDè¾“å‡ºè®¾ç½®ç”µæœºé€Ÿåº¦
+ * FOC¿ØÖÆÖ÷Ñ­»·£¬¸ù¾İ½ÇËÙ¶ÈPIDÊä³öÉèÖÃµç»úËÙ¶È
  */
 void Balance_Foc_Loop(void)
 {
@@ -290,11 +290,11 @@ void Balance_Foc_Loop(void)
 }
 
 /**
- * æ›´æ–°å°è½¦å§¿æ€ä¿¡æ¯
- * @param roll æ»šè½¬è§’
- * @param yaw åèˆªè§’
- * @param pitch ä¿¯ä»°è§’
- * å†…éƒ¨å‡½æ•°ï¼Œå¤–éƒ¨é€šè¿‡IPCè°ƒç”¨Balance_Attitude_Update_From_Ipcæ›´æ–°å§¿æ€ä¿¡æ¯
+ * ¸üĞÂĞ¡³µ×ËÌ¬ĞÅÏ¢
+ * @param roll ¹ö×ª½Ç
+ * @param yaw Æ«º½½Ç
+ * @param pitch ¸©Ñö½Ç
+ * ÄÚ²¿º¯Êı£¬Íâ²¿Í¨¹ıIPCµ÷ÓÃBalance_Attitude_Update_From_Ipc¸üĞÂ×ËÌ¬ĞÅÏ¢
  */
 static void Balance_Attitude_Update(float roll, float yaw, float pitch)
 {
@@ -308,8 +308,8 @@ static void Balance_Attitude_Update(float roll, float yaw, float pitch)
 }
 
 /**
- * IPCå›è°ƒå‡½æ•°ï¼Œæ¥æ”¶æ¥è‡ªM7_1çš„å§¿æ€æ•°æ®å¹¶æ›´æ–°å°è½¦å§¿æ€
- * @param receive_data ä»M7_1å‘é€è¿‡æ¥çš„æ•°æ®ï¼ŒåŒ…å«rollã€yawã€pitchä¿¡æ¯
+ * IPC»Øµ÷º¯Êı£¬½ÓÊÕÀ´×ÔM7_1µÄ×ËÌ¬Êı¾İ²¢¸üĞÂĞ¡³µ×ËÌ¬
+ * @param receive_data ´ÓM7_1·¢ËÍ¹ıÀ´µÄÊı¾İ£¬°üº¬roll¡¢yaw¡¢pitchĞÅÏ¢
  */
 void Balance_Attitude_Update_From_Ipc(uint32 receive_data)
 {

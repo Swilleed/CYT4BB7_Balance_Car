@@ -3,7 +3,7 @@
 #include "zf_device_oled.h"
 
 /**
- * @brief åˆå§‹åŒ–Flashæ—¥å¿—è®°å½•å™¨
+ * @brief ³õÊ¼»¯FlashÈÕÖ¾¼ÇÂ¼Æ÷
  */
 void Logger_Init(void)
 {
@@ -11,18 +11,18 @@ void Logger_Init(void)
 }
 
 /**
- * @brief å‘Flashæ—¥å¿—è®°å½•å™¨å†™å…¥æ•°æ®å—
+ * @brief ÏòFlashÈÕÖ¾¼ÇÂ¼Æ÷Ğ´ÈëÊı¾İ¿é
  *
- * @param start_page èµ·å§‹é¡µç 
- * @param buffer æ•°æ®ç¼“å†²åŒºæŒ‡é’ˆ
- * @param byte_len è¦å†™å…¥çš„å­—èŠ‚é•¿åº¦
+ * @param start_page ÆğÊ¼Ò³Âë
+ * @param buffer Êı¾İ»º³åÇøÖ¸Õë
+ * @param byte_len ÒªĞ´ÈëµÄ×Ö½Ú³¤¶È
  */
 void Logger_WriteBlock(uint32 start_page, void *buffer, uint32 byte_len)
 {
     uint32 *p_src = (uint32 *)buffer;
-    uint32 totol_words = (byte_len + 3) / 4; // å‘ä¸Šå–æ•´ä¸ºå­—æ•°
+    uint32 totol_words = (byte_len + 3) / 4; // ÏòÉÏÈ¡ÕûÎª×ÖÊı
     uint32 words_per_page = FLASH_PAGE_SIZE / 4;
-    uint32 pages_needed = (totol_words + words_per_page - 1) / words_per_page; // å‘ä¸Šå–æ•´ä¸ºé¡µæ•°
+    uint32 pages_needed = (totol_words + words_per_page - 1) / words_per_page; // ÏòÉÏÈ¡ÕûÎªÒ³Êı
 
     for (uint32 i = 0; i < pages_needed; i++)
     {
@@ -41,18 +41,18 @@ void Logger_WriteBlock(uint32 start_page, void *buffer, uint32 byte_len)
 }
 
 /**
- * @brief ä»Flashæ—¥å¿—è®°å½•å™¨è¯»å–æ•°æ®å—
+ * @brief ´ÓFlashÈÕÖ¾¼ÇÂ¼Æ÷¶ÁÈ¡Êı¾İ¿é
  *
- * @param start_page èµ·å§‹é¡µç 
- * @param buffer æ•°æ®ç¼“å†²åŒºæŒ‡é’ˆ
- * @param byte_len è¦è¯»å–çš„å­—èŠ‚é•¿åº¦
+ * @param start_page ÆğÊ¼Ò³Âë
+ * @param buffer Êı¾İ»º³åÇøÖ¸Õë
+ * @param byte_len Òª¶ÁÈ¡µÄ×Ö½Ú³¤¶È
  */
 void Logger_ReadBlock(uint32 start_page, void *buffer, uint32 byte_len)
 {
     uint32 *p_dest = (uint32 *)buffer;
-    uint32 totol_words = (byte_len + 3) / 4; // å‘ä¸Šå–æ•´ä¸ºå­—æ•°
+    uint32 totol_words = (byte_len + 3) / 4; // ÏòÉÏÈ¡ÕûÎª×ÖÊı
     uint32 words_per_page = FLASH_PAGE_SIZE / 4;
-    uint32 pages_needed = (byte_len + FLASH_PAGE_SIZE - 1) / FLASH_PAGE_SIZE; // å‘ä¸Šå–æ•´ä¸ºé¡µæ•°
+    uint32 pages_needed = (byte_len + FLASH_PAGE_SIZE - 1) / FLASH_PAGE_SIZE; // ÏòÉÏÈ¡ÕûÎªÒ³Êı
 
     for (uint32 i = 0; i < pages_needed; i++)
     {
@@ -71,46 +71,46 @@ void Logger_ReadBlock(uint32 start_page, void *buffer, uint32 byte_len)
 }
 
 /**
- * @brief Flash Logger åŠŸèƒ½è‡ªæµ‹è°ƒè¯•æ¥å£
- * @note è¯¥å‡½æ•°ä¼šæµ‹è¯•ä»ç¬¬ 60 é¡µå¼€å§‹å­˜å– 3 ä¸ª PathPoint_t ç»“æ„ä½“
+ * @brief Flash Logger ¹¦ÄÜ×Ô²âµ÷ÊÔ½Ó¿Ú
+ * @note ¸Ãº¯Êı»á²âÊÔ´ÓµÚ 60 Ò³¿ªÊ¼´æÈ¡ 3 ¸ö PathPoint_t ½á¹¹Ìå
  */
 void Logger_Debug_Test(void)
 {
-    // 1. å‡†å¤‡æµ‹è¯•æ•°æ®
+    // 1. ×¼±¸²âÊÔÊı¾İ
     typedef struct
     {
         int16 left_ticks;
         int16 right_ticks;
         float yaw;
-    } TestPoint_t; // ä¸´æ—¶å®šä¹‰ä¸€ä¸ªç»“æ„ä½“ï¼Œæ¨¡æ‹Ÿåº”ç”¨å±‚æ•°æ®
+    } TestPoint_t; // ÁÙÊ±¶¨ÒåÒ»¸ö½á¹¹Ìå£¬Ä£ÄâÓ¦ÓÃ²ãÊı¾İ
 
     TestPoint_t write_data[3] = {
         {100, -100, 12.5f},
         {500, 200, 45.0f},
         {999, 888, 179.9f}};
-    TestPoint_t read_data[3] = {0}; // æ¥æ”¶è¯»å–ç»“æœ
+    TestPoint_t read_data[3] = {0}; // ½ÓÊÕ¶ÁÈ¡½á¹û
 
     oled_clear();
     oled_show_string(0, 0, "Flash Test Inc");
 
-    // 2. å†™å…¥æ•°æ®åˆ° Flash (ä»ç¬¬ 60 é¡µå¼€å§‹)
+    // 2. Ğ´ÈëÊı¾İµ½ Flash (´ÓµÚ 60 Ò³¿ªÊ¼)
     Logger_WriteBlock(60, (void *)write_data, sizeof(write_data));
     oled_show_string(0, 1, "Write Done");
 
-    // 3. è¯»å›æ•°æ®
+    // 3. ¶Á»ØÊı¾İ
     Logger_ReadBlock(60, (void *)read_data, sizeof(read_data));
     oled_show_string(0, 2, "Read Done");
 
-    // 4. æ˜¾ç¤ºè¯»å›çš„æ•°æ®è¿›è¡Œæ¯”å¯¹ (å–ç¬¬ 1 ä¸ªç‚¹å’Œç¬¬ 3 ä¸ªç‚¹)
-    // æ˜¾ç¤ºç¬¬ 1 ä¸ªç‚¹çš„ Left Ticks (é¢„æœŸ 100)
+    // 4. ÏÔÊ¾¶Á»ØµÄÊı¾İ½øĞĞ±È¶Ô (È¡µÚ 1 ¸öµãºÍµÚ 3 ¸öµã)
+    // ÏÔÊ¾µÚ 1 ¸öµãµÄ Left Ticks (Ô¤ÆÚ 100)
     oled_show_string(0, 3, "P1 L:");
     oled_show_int(40, 3, read_data[0].left_ticks, 4);
 
-    // æ˜¾ç¤ºç¬¬ 3 ä¸ªç‚¹çš„ Yaw (é¢„æœŸ 179.9)
+    // ÏÔÊ¾µÚ 3 ¸öµãµÄ Yaw (Ô¤ÆÚ 179.9)
     oled_show_string(0, 4, "P3 Y:");
     oled_show_float(40, 4, read_data[2].yaw, 3, 1);
 
-    // 5. è‡ªåŠ¨æ ¡éªŒ
+    // 5. ×Ô¶¯Ğ£Ñé
     if (memcmp(write_data, read_data, sizeof(write_data)) == 0)
     {
         oled_show_string(0, 6, "VERIFY: SUCCESS");

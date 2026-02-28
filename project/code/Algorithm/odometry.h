@@ -5,9 +5,9 @@
 
 typedef struct
 {
-    float x;   // X åæ ‡ (å•ä½ï¼šè„‰å†²)
-    float y;   // Y åæ ‡ (å•ä½ï¼šè„‰å†²)
-    float yaw; // å½“å‰è§’åº¦ (å¼§åº¦)
+    float x;   // X ×ø±ê (µ¥Î»£ºÂö³å)
+    float y;   // Y ×ø±ê (µ¥Î»£ºÂö³å)
+    float yaw; // µ±Ç°½Ç¶È (»¡¶È)
 } Pose_t;
 
 extern Pose_t current_pose;

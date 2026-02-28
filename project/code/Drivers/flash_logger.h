@@ -2,7 +2,7 @@
 #define _FLASH_LOGGER_H_
 
 #ifndef FLASH_PAGE_SIZE
-#define FLASH_PAGE_SIZE 256 // 假设每页大小为256字节，根据实际
+#define FLASH_PAGE_SIZE 256 // ����ÿҳ��СΪ256�ֽڣ�����ʵ��
 #endif
 
 void Logger_Init(void);

@@ -1,18 +1,18 @@
 #ifndef __PID_CONTROLLER_H__
 #define __PID_CONTROLLER_H__
 
-// PIDå‚æ•°ç»“æ„ä½“
+// PID²ÎÊı½á¹¹Ìå
 typedef struct
 {
-    float TargetValue; // ç›®æ ‡å€¼
-    float ActualValue; // å®é™…å€¼
-    float Err;         // å½“å‰è¯¯å·®
-    float Err_Last;    // ä¸Šæ¬¡è¯¯å·®
-    float Err_Prev;    // ä¸Šä¸Šæ¬¡è¯¯å·®
-    float Kp, Ki, Kd;  // PIDå‚æ•°
-    float Integral;    // ç§¯åˆ†å€¼
-    float Output;      // è¾“å‡ºå€¼
-    float OutputMax;   // è¾“å‡ºé™å¹…
+    float TargetValue; // Ä¿±êÖµ
+    float ActualValue; // Êµ¼ÊÖµ
+    float Err;         // µ±Ç°Îó²î
+    float Err_Last;    // ÉÏ´ÎÎó²î
+    float Err_Prev;    // ÉÏÉÏ´ÎÎó²î
+    float Kp, Ki, Kd;  // PID²ÎÊı
+    float Integral;    // »ı·ÖÖµ
+    float Output;      // Êä³öÖµ
+    float OutputMax;   // Êä³öÏŞ·ù
     float OutputMin;
 } pid_controller_t;
 

@@ -6,8 +6,8 @@ uint8_t InfraredSenseFlag = 0;
 
 void InfraredSense_Init(void)
 {
-    // å¦‚æžœä¼ æ„Ÿå™¨é»˜è®¤è¾“å‡ºé«˜ç”µå¹³ï¼Œæ£€æµ‹åˆ°ç‰©ä½“å˜ä½Žç”µå¹³ï¼Œè¿™é‡Œç”¨ä¸‹æ‹‰å¯èƒ½ä¸ç¨³å®šï¼ŒæŽ¨è GPI_PULL_UP
-    // è¿™é‡Œæš‚æ—¶ä¿æŒåŽŸé…ç½®ï¼Œå¦‚ç¡¬ä»¶éœ€è¦è¯·ä¿®æ”¹ä¸º GPI_PULL_UP
+    // Èç¹û´«¸ÐÆ÷Ä¬ÈÏÊä³ö¸ßµçÆ½£¬¼ì²âµ½ÎïÌå±äµÍµçÆ½£¬ÕâÀïÓÃÏÂÀ­¿ÉÄÜ²»ÎÈ¶¨£¬ÍÆ¼ö GPI_PULL_UP
+    // ÕâÀïÔÝÊ±±£³ÖÔ­ÅäÖÃ£¬ÈçÓ²¼þÐèÒªÇëÐÞ¸ÄÎª GPI_PULL_UP
     gpio_init(INFRARED_SENSOR_1, GPI, 0, GPI_PULL_DOWN);
     gpio_init(INFRARED_SENSOR_2, GPI, 0, GPI_PULL_DOWN);
     gpio_init(INFRARED_SENSOR_3, GPI, 0, GPI_PULL_DOWN);
@@ -80,7 +80,7 @@ void InfraredSensor_Tick(void)
 
 uint8_t GetInfraredSenseFlag(void)
 {
-    // è¿”å›žæ»¤æ³¢åŽçš„å…¨å±€å˜é‡
+    // ·µ»ØÂË²¨ºóµÄÈ«¾Ö±äÁ¿
     return InfraredSenseFlag;
 }
 

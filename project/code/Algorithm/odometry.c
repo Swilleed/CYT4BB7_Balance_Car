@@ -8,7 +8,7 @@
 Pose_t current_pose = {0.0f, 0.0f, 0.0f};
 
 /**
- * @brief åˆå§‹åŒ–é‡Œç¨‹è®¡
+ * @brief ³õÊ¼»¯Àï³Ì¼Æ
  */
 void Odometry_Init(void)
 {
@@ -16,7 +16,7 @@ void Odometry_Init(void)
 }
 
 /**
- * @brief é‡ç½®åæ ‡é›¶ç‚¹
+ * @brief ÖØÖÃ×ø±êÁãµã
  */
 void Odometry_Reset(void)
 {
@@ -26,16 +26,16 @@ void Odometry_Reset(void)
 }
 
 /**
- * @brief æ›´æ–°é‡Œç¨‹è®¡ (åœ¨æ§åˆ¶å¾ªç¯ä¸­è°ƒç”¨)
- * @param left_diff  å·¦è½®ä½ç§»å¢é‡
- * @param right_diff å³è½®ä½ç§»å¢é‡
- * @param yaw_deg    å½“å‰èˆªå‘è§’ (è§’åº¦åˆ¶)
+ * @brief ¸üĞÂÀï³Ì¼Æ (ÔÚ¿ØÖÆÑ­»·ÖĞµ÷ÓÃ)
+ * @param left_diff  ×óÂÖÎ»ÒÆÔöÁ¿
+ * @param right_diff ÓÒÂÖÎ»ÒÆÔöÁ¿
+ * @param yaw_deg    µ±Ç°º½Ïò½Ç (½Ç¶ÈÖÆ)
  */
 void Odometry_Update(int16 left_diff, int16 right_diff, float yaw_deg)
 {
     float delta_s = (float)(left_diff + right_diff) / 2.0f;
 
-    // å°†è§’åº¦è½¬ä¸ºå¼§åº¦
+    // ½«½Ç¶È×ªÎª»¡¶È
     current_pose.yaw = yaw_deg * PI / 180.0f;
 
     current_pose.x += delta_s * cosf(current_pose.yaw);

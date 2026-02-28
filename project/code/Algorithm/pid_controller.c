@@ -1,13 +1,13 @@
 #include "pid_controller.h"
 
 /**
- * PIDåˆå§‹åŒ–å‡½æ•°
- * @param pid PIDç»“æ„ä½“æŒ‡é’ˆ
- * @param kp æ¯”ä¾‹ç³»æ•°
- * @param ki ç§¯åˆ†ç³»æ•°
- * @param kd å¾®åˆ†ç³»æ•°
- * @param output_min è¾“å‡ºæœ€å°å€¼
- * @param output_max è¾“å‡ºæœ€å¤§å€¼
+ * PID³õÊ¼»¯º¯Êı
+ * @param pid PID½á¹¹ÌåÖ¸Õë
+ * @param kp ±ÈÀıÏµÊı
+ * @param ki »ı·ÖÏµÊı
+ * @param kd Î¢·ÖÏµÊı
+ * @param output_min Êä³ö×îĞ¡Öµ
+ * @param output_max Êä³ö×î´óÖµ
  */
 void PID_Init(pid_controller_t *pid, float kp, float ki, float kd, float output_min, float output_max)
 {
@@ -16,7 +16,7 @@ void PID_Init(pid_controller_t *pid, float kp, float ki, float kd, float output_
     pid->Err_Prev = 0.0f;
     pid->Integral = 0.0f;
     pid->Output = 0.0f;
-    pid->OutputMax = output_max; // ä¸ PWM å ç©ºæ¯”èŒƒå›´ä¸€è‡´
+    pid->OutputMax = output_max; // Óë PWM Õ¼¿Õ±È·¶Î§Ò»ÖÂ
     pid->OutputMin = output_min;
     pid->Kp = kp;
     pid->Ki = ki;
@@ -24,37 +24,37 @@ void PID_Init(pid_controller_t *pid, float kp, float ki, float kd, float output_
 }
 
 /**
- * PIDè®¡ç®—å‡½æ•°
- * @param pid PIDç»“æ„ä½“æŒ‡é’ˆ
- * @param target ç›®æ ‡å€¼
- * @param actual å®é™…å€¼
- * @return PIDè¾“å‡ºå€¼
+ * PID¼ÆËãº¯Êı
+ * @param pid PID½á¹¹ÌåÖ¸Õë
+ * @param target Ä¿±êÖµ
+ * @param actual Êµ¼ÊÖµ
+ * @return PIDÊä³öÖµ
  */
 float PID_Calculate(pid_controller_t *pid, float target, float actual)
 {
     pid->TargetValue = target;
     pid->ActualValue = actual;
 
-    // è®¡ç®—å½“å‰è¯¯å·®
+    // ¼ÆËãµ±Ç°Îó²î
     pid->Err = pid->TargetValue - pid->ActualValue;
 
-    // ç§¯åˆ†é¡¹è®¡ç®—
-    // ç´¯åŠ 
+    // »ı·ÖÏî¼ÆËã
+    // ÀÛ¼Ó
     pid->Integral += pid->Err;
 
-    // å¾®åˆ†é¡¹è®¡ç®—
+    // Î¢·ÖÏî¼ÆËã
     float derivative = pid->Err - pid->Err_Last;
 
-    // PIDè¾“å‡ºè®¡ç®—
+    // PIDÊä³ö¼ÆËã
     pid->Output = (pid->Kp * pid->Err) + (pid->Ki * pid->Integral) + (pid->Kd * derivative);
 
-    // è¾“å‡ºé™å¹…
+    // Êä³öÏŞ·ù
     if (pid->Output > pid->OutputMax)
         pid->Output = pid->OutputMax;
     else if (pid->Output < pid->OutputMin)
         pid->Output = pid->OutputMin;
 
-    // æ›´æ–°è¯¯å·®å†å²
+    // ¸üĞÂÎó²îÀúÊ·
     pid->Err_Prev = pid->Err_Last;
     pid->Err_Last = pid->Err;
 
@@ -62,22 +62,22 @@ float PID_Calculate(pid_controller_t *pid, float target, float actual)
 }
 
 /**
- * å¹³è¡¡è½¦ä¸²çº§pidå®ç°
- * @param outer_pid å¤–ç¯PIDç»“æ„ä½“æŒ‡é’ˆï¼ˆè§’åº¦æ§åˆ¶ï¼‰
- * @param inner_pid å†…ç¯PIDç»“æ„ä½“æŒ‡é’ˆï¼ˆè§’é€Ÿåº¦æ§åˆ¶ï¼‰
- * @param target_angle ç›®æ ‡è§’åº¦
- * @param actual_angle å®é™…è§’åº¦
- * @param actual_angular_velocity å®é™…è§’é€Ÿåº¦
- * @return æœ€ç»ˆPIDè¾“å‡ºå€¼
+ * Æ½ºâ³µ´®¼¶pidÊµÏÖ
+ * @param outer_pid Íâ»·PID½á¹¹ÌåÖ¸Õë£¨½Ç¶È¿ØÖÆ£©
+ * @param inner_pid ÄÚ»·PID½á¹¹ÌåÖ¸Õë£¨½ÇËÙ¶È¿ØÖÆ£©
+ * @param target_angle Ä¿±ê½Ç¶È
+ * @param actual_angle Êµ¼Ê½Ç¶È
+ * @param actual_angular_velocity Êµ¼Ê½ÇËÙ¶È
+ * @return ×îÖÕPIDÊä³öÖµ
  */
 float PID_Balance_Calculate(pid_controller_t *outer_pid, pid_controller_t *inner_pid,
                             float target_angle, float actual_angle,
                             float actual_angular_velocity)
 {
-    // å¤–ç¯PIDè®¡ç®—ï¼Œè®¡ç®—ç›®æ ‡è§’é€Ÿåº¦
+    // Íâ»·PID¼ÆËã£¬¼ÆËãÄ¿±ê½ÇËÙ¶È
     float target_angular_velocity = PID_Calculate(outer_pid, target_angle, actual_angle);
 
-    // å†…ç¯PIDè®¡ç®—ï¼Œè®¡ç®—æœ€ç»ˆè¾“å‡º
+    // ÄÚ»·PID¼ÆËã£¬¼ÆËã×îÖÕÊä³ö
     float output = PID_Calculate(inner_pid, target_angular_velocity, actual_angular_velocity);
 
     return output;

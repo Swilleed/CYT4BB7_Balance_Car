@@ -2,7 +2,7 @@
 #define __MADGWICK_H
 
 typedef struct {
-    float q0, q1, q2, q3;  // å››å…ƒæ•°ï¼šq0(å®éƒ¨), q1/q2/q3(è™šéƒ¨)ï¼Œè¡¨ç¤ºä¸‰ç»´å§¿æ€
+    float q0, q1, q2, q3;  // ËÄÔªÊı£ºq0(Êµ²¿), q1/q2/q3(Ğé²¿)£¬±íÊ¾ÈıÎ¬×ËÌ¬
 } MadgwickFilter;
 void Madgwick_Update(MadgwickFilter *mf, float gyro[], float accel[], float dt) ;
 

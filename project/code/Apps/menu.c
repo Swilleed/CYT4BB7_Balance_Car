@@ -14,16 +14,16 @@ static Menu MainMenu = {
 
 Menu *InitMenu(void)
 {
-    // åˆå§‹åŒ–ä¸»èœå•
+    // ³õÊ¼»¯Ö÷²Ëµ¥
     CurrentMenu = &MainMenu;
     CurrentSelection = 0;
     return CurrentMenu;
 }
 
 /**
- * æ·»åŠ å­èœå•é¡¹
- * @param parent çˆ¶èœå•æŒ‡é’ˆ
- * @param child å­èœå•æŒ‡é’ˆ
+ * Ìí¼Ó×Ó²Ëµ¥Ïî
+ * @param parent ¸¸²Ëµ¥Ö¸Õë
+ * @param child ×Ó²Ëµ¥Ö¸Õë
  */
 void Menu_AddChild(Menu *parent, Menu *child)
 {
@@ -36,11 +36,11 @@ void Menu_AddChild(Menu *parent, Menu *child)
 }
 
 /**
- * è¾…åŠ©å‡½æ•°ï¼Œå°†æµ®ç‚¹æ•°è½¬æ¢ä¸ºå­—ç¬¦ä¸²
- * @param value æµ®ç‚¹æ•°å€¼
- * @param buffer å­˜å‚¨å­—ç¬¦ä¸²çš„ç¼“å†²åŒº
- * @param bufferSize ç¼“å†²åŒºå¤§å°
- * @return ç›®æ ‡å­—ç¬¦ä¸²
+ * ¸¨Öúº¯Êı£¬½«¸¡µãÊı×ª»»Îª×Ö·û´®
+ * @param value ¸¡µãÊıÖµ
+ * @param buffer ´æ´¢×Ö·û´®µÄ»º³åÇø
+ * @param bufferSize »º³åÇø´óĞ¡
+ * @return Ä¿±ê×Ö·û´®
  */
 static char *FloatToCharArray(float value, char *buffer, int bufferSize)
 {
@@ -48,7 +48,7 @@ static char *FloatToCharArray(float value, char *buffer, int bufferSize)
     return buffer;
 }
 
-// è¿›å…¥å­èœå•
+// ½øÈë×Ó²Ëµ¥
 static void NavigateToChild(void)
 {
     if (CurrentSelection < CurrentMenu->child_count)
@@ -58,7 +58,7 @@ static void NavigateToChild(void)
     }
 }
 
-// è¿”å›ä¸Šçº§èœå•
+// ·µ»ØÉÏ¼¶²Ëµ¥
 static void NavigateToParent(void)
 {
     if (CurrentMenu->parent != NULL)
@@ -70,14 +70,14 @@ static void NavigateToParent(void)
 
 static void HandleInput(void)
 {
-    // æœ‰å­èœå•ï¼šæµè§ˆ/è¿›å…¥/è¿”å›
+    // ÓĞ×Ó²Ëµ¥£ºä¯ÀÀ/½øÈë/·µ»Ø
     if (CurrentMenu->child_count > 0)
     {
         if (key_get_state(KEY_DOWN) == KEY_SHORT_PRESS)
         {
             if (CurrentSelection < CurrentMenu->child_count - 1)
             {
-                CurrentSelection++; // ä¸‹ç§»
+                CurrentSelection++; // ÏÂÒÆ
             }
             else if (CurrentSelection == CurrentMenu->child_count - 1)
             {
@@ -88,7 +88,7 @@ static void HandleInput(void)
         {
             if (CurrentSelection > 0)
             {
-                CurrentSelection--; // ä¸Šç§»
+                CurrentSelection--; // ÉÏÒÆ
             }
             else if (CurrentSelection == 0)
             {
@@ -97,14 +97,14 @@ static void HandleInput(void)
         }
         else if (key_get_state(KEY_SELECT) == KEY_SHORT_PRESS)
         {
-            NavigateToChild(); // è¿›å…¥å­èœå•
+            NavigateToChild(); // ½øÈë×Ó²Ëµ¥
         }
         else if (CurrentMenu->parent != NULL && key_get_state(KEY_BACK) == KEY_SHORT_PRESS)
         {
-            NavigateToParent(); // è¿”å›ä¸Šçº§èœå•
+            NavigateToParent(); // ·µ»ØÉÏ¼¶²Ëµ¥
         }
     }
-    // å¶å­èœå•ï¼šçŸ­æŒ‰è¿”å›
+    // Ò¶×Ó²Ëµ¥£º¶Ì°´·µ»Ø
     else
     {
         if (key_get_state(KEY_BACK) == KEY_SHORT_PRESS)
@@ -120,10 +120,10 @@ static void HandleInput(void)
 
 void DisplayMenu(void)
 {
-    // å…ˆå¤„ç†æŒ‰é”®ï¼Œç¡®ä¿æœ¬æ¬¡æ¸²æŸ“ä½¿ç”¨æœ€æ–°é€‰æ‹©çŠ¶æ€
+    // ÏÈ´¦Àí°´¼ü£¬È·±£±¾´ÎäÖÈ¾Ê¹ÓÃ×îĞÂÑ¡Ôñ×´Ì¬
     HandleInput();
 
-    // å¶å­èŠ‚ç‚¹ï¼šåªå±•ç¤ºåŠ¨ä½œé¡µé¢
+    // Ò¶×Ó½Úµã£ºÖ»Õ¹Ê¾¶¯×÷Ò³Ãæ
     if (CurrentMenu->child_count == 0)
     {
         if (CurrentMenu->action != NULL)
@@ -138,7 +138,7 @@ void DisplayMenu(void)
 
     for (uint8_t i = 0; i < CurrentMenu->child_count; i++)
     {
-        uint8_t row = i + 2; // è¡Œå·ä»1å¼€å§‹ï¼Œç¬¬äºŒè¡Œèµ·åˆ—å‡ºå­èœå•
+        uint8_t row = i + 2; // ĞĞºÅ´Ó1¿ªÊ¼£¬µÚ¶şĞĞÆğÁĞ³ö×Ó²Ëµ¥
         char line[17];
         snprintf(line, sizeof(line), "%u %c%s", (unsigned)(i + 1), (i == CurrentSelection) ? '>' : ' ', CurrentMenu->children[i]->title);
         oled_show_string(1, row, line);

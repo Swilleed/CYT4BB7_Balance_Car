@@ -9,7 +9,7 @@ Motor_TypeDef motorLeft;
 Motor_TypeDef motorRight;
 
 /**
- * åˆå§‹åŒ–ç”µæœºç»“æ„ä½“åŠå…¶PIDå‚æ•°
+ * ³õÊ¼»¯µç»ú½á¹¹Ìå¼°ÆäPID²ÎÊı
  */
 void Motor_Init(float kp, float ki, float kd)
 {
@@ -54,9 +54,9 @@ void Motor_Init(float kp, float ki, float kd)
 }
 
 /**
- * è®¾ç½®ç”µæœºçš„ç›®æ ‡é€Ÿåº¦
- * @param motor æŒ‡å‘ç”µæœºç»“æ„ä½“çš„æŒ‡é’ˆ
- * @param targetSpeed ç›®æ ‡é€Ÿåº¦å€¼
+ * ÉèÖÃµç»úµÄÄ¿±êËÙ¶È
+ * @param motor Ö¸Ïòµç»ú½á¹¹ÌåµÄÖ¸Õë
+ * @param targetSpeed Ä¿±êËÙ¶ÈÖµ
  */
 void Motor_SetTargetSpeed(Motor_TypeDef *motor, float targetSpeed)
 {
@@ -64,9 +64,9 @@ void Motor_SetTargetSpeed(Motor_TypeDef *motor, float targetSpeed)
 }
 
 /**
- * è®¾ç½®ç”µæœºçš„PWMå ç©ºæ¯”
- * @param motor æŒ‡å‘ç”µæœºç»“æ„ä½“çš„æŒ‡é’ˆ
- * @param duty å ç©ºæ¯”å€¼ï¼ˆ-10000~10000å¯¹åº”-100%~100%ï¼‰
+ * ÉèÖÃµç»úµÄPWMÕ¼¿Õ±È
+ * @param motor Ö¸Ïòµç»ú½á¹¹ÌåµÄÖ¸Õë
+ * @param duty Õ¼¿Õ±ÈÖµ£¨-10000~10000¶ÔÓ¦-100%~100%£©
  */
 void Motor_SetDuty(Motor_TypeDef *motor, float duty)
 {
@@ -96,11 +96,11 @@ void Motor_SetDuty(Motor_TypeDef *motor, float duty)
 }
 
 /**
- * è®¾ç½®ç”µæœºçš„PIDå‚æ•°
- * @param motor æŒ‡å‘ç”µæœºç»“æ„ä½“çš„æŒ‡é’ˆ
- * @param kp æ¯”ä¾‹ç³»æ•°
- * @param ki ç§¯åˆ†ç³»æ•°
- * @param kd å¾®åˆ†ç³»æ•°
+ * ÉèÖÃµç»úµÄPID²ÎÊı
+ * @param motor Ö¸Ïòµç»ú½á¹¹ÌåµÄÖ¸Õë
+ * @param kp ±ÈÀıÏµÊı
+ * @param ki »ı·ÖÏµÊı
+ * @param kd Î¢·ÖÏµÊı
  */
 void Motor_SetPIDParameters(Motor_TypeDef *motor, float kp, float ki, float kd)
 {
@@ -110,9 +110,9 @@ void Motor_SetPIDParameters(Motor_TypeDef *motor, float kp, float ki, float kd)
 }
 
 /**
- * é‡‡æ ·ç”µæœºç¼–ç å™¨çš„è„‰å†²è®¡æ•°
- * @param motor æŒ‡å‘ç”µæœºç»“æ„ä½“çš„æŒ‡é’ˆ
- * @return æœ¬æ¬¡é‡‡æ ·çš„è„‰å†²å¢é‡
+ * ²ÉÑùµç»ú±àÂëÆ÷µÄÂö³å¼ÆÊı
+ * @param motor Ö¸Ïòµç»ú½á¹¹ÌåµÄÖ¸Õë
+ * @return ±¾´Î²ÉÑùµÄÂö³åÔöÁ¿
  */
 int16_t Motor_SampleEncoder(Motor_TypeDef *motor)
 {
@@ -130,9 +130,9 @@ int16_t Motor_SampleEncoder(Motor_TypeDef *motor)
 }
 
 /**
- * è·å–ç”µæœºçš„ç´¯è®¡è¡Œé©¶è·ç¦»ï¼ˆç¼–ç å™¨è„‰å†²æ€»æ•°ï¼‰
- * @param motor æŒ‡å‘ç”µæœºç»“æ„ä½“çš„æŒ‡é’ˆ
- * @return ç´¯è®¡çš„ç¼–ç å™¨è„‰å†²æ•°
+ * »ñÈ¡µç»úµÄÀÛ¼ÆĞĞÊ»¾àÀë£¨±àÂëÆ÷Âö³å×ÜÊı£©
+ * @param motor Ö¸Ïòµç»ú½á¹¹ÌåµÄÖ¸Õë
+ * @return ÀÛ¼ÆµÄ±àÂëÆ÷Âö³åÊı
  */
 int32_t Motor_GetTotalDistanceCount(Motor_TypeDef *motor)
 {
@@ -145,8 +145,8 @@ int32_t Motor_GetTotalDistanceCount(Motor_TypeDef *motor)
 }
 
 /**
- * é‡ç½®ç”µæœºçš„ç´¯è®¡è¡Œé©¶è·ç¦»è®¡æ•°
- * @param motor æŒ‡å‘ç”µæœºç»“æ„ä½“çš„æŒ‡é’ˆ
+ * ÖØÖÃµç»úµÄÀÛ¼ÆĞĞÊ»¾àÀë¼ÆÊı
+ * @param motor Ö¸Ïòµç»ú½á¹¹ÌåµÄÖ¸Õë
  */
 void Motor_ResetTotalDistance(Motor_TypeDef *motor)
 {
@@ -161,9 +161,9 @@ void Motor_ResetTotalDistance(Motor_TypeDef *motor)
 }
 
 /**
- * é€šè¿‡ä¸²çº§PIDæ§åˆ¶ç”µæœºé€Ÿåº¦ï¼Œä½¿å…¶ä¿æŒå¹³è¡¡
- * @param motor æŒ‡å‘ç”µæœºç»“æ„ä½“çš„æŒ‡é’ˆ
- * @param actualSpeed å®é™…é€Ÿåº¦åé¦ˆå€¼
+ * Í¨¹ı´®¼¶PID¿ØÖÆµç»úËÙ¶È£¬Ê¹Æä±£³ÖÆ½ºâ
+ * @param motor Ö¸Ïòµç»ú½á¹¹ÌåµÄÖ¸Õë
+ * @param actualSpeed Êµ¼ÊËÙ¶È·´À¡Öµ
  */
 void Motor_UpdateSpeed(Motor_TypeDef *motor, float actualSpeed)
 {

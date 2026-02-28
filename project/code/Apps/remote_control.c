@@ -67,11 +67,11 @@ uint8_t Remote_Control_LoadPIDParam(void)
 }
 
 /**
- * è§£æè¿œç¨‹å‚æ•°è®¾ç½®æŒ‡ä»¤
- * åè®®ç¤ºä¾‹:
- * $PID,1.0,0.1,0.01  -> æ›´æ–°PIDå‚æ•°ç¼“å­˜
- * $SAVE              -> å°†PIDå‚æ•°ç¼“å­˜å†™å…¥Flash
- * $LOAD              -> ä»FlashåŠ è½½PIDå‚æ•°ç¼“å­˜
+ * ½âÎöÔ¶³Ì²ÎÊıÉèÖÃÖ¸Áî
+ * Ğ­ÒéÊ¾Àı:
+ * $PID,1.0,0.1,0.01  -> ¸üĞÂPID²ÎÊı»º´æ
+ * $SAVE              -> ½«PID²ÎÊı»º´æĞ´ÈëFlash
+ * $LOAD              -> ´ÓFlash¼ÓÔØPID²ÎÊı»º´æ
  */
 static uint8_t Remote_Set_Param_Parse(const uint8 *buffer, uint8 len)
 {
@@ -123,11 +123,11 @@ static uint8_t Remote_Set_Param_Parse(const uint8 *buffer, uint8 len)
 }
 
 /**
- * è§£æè¿œç¨‹æ§åˆ¶æ•°æ®
- * @param buffer æ¥æ”¶åˆ°çš„æ•°æ®ç¼“å†²åŒº
- * @param len æ•°æ®é•¿åº¦
- * @param cmd è§£æåçš„æ§åˆ¶å‘½ä»¤ç»“æ„ä½“æŒ‡é’ˆ
- * @return è§£ææˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+ * ½âÎöÔ¶³Ì¿ØÖÆÊı¾İ
+ * @param buffer ½ÓÊÕµ½µÄÊı¾İ»º³åÇø
+ * @param len Êı¾İ³¤¶È
+ * @param cmd ½âÎöºóµÄ¿ØÖÆÃüÁî½á¹¹ÌåÖ¸Õë
+ * @return ½âÎö³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
  */
 static uint8_t Remote_Control_Parse(const uint8 *buffer, uint8 len, RemoteControl_Cmd_t *cmd)
 {
@@ -157,7 +157,7 @@ static uint8_t Remote_Control_Parse(const uint8 *buffer, uint8 len, RemoteContro
 }
 
 /**
- * æ›´æ–°è¿œç¨‹æ§åˆ¶æ•°æ®ï¼Œä»æ— çº¿ä¸²å£è¯»å–æ•°æ®å¹¶è§£æ
+ * ¸üĞÂÔ¶³Ì¿ØÖÆÊı¾İ£¬´ÓÎŞÏß´®¿Ú¶ÁÈ¡Êı¾İ²¢½âÎö
  */
 void Remote_Control_Update(void)
 {
@@ -179,8 +179,8 @@ void Remote_Control_Update(void)
 }
 
 /**
- * è·å–æœ€æ–°çš„è¿œç¨‹æ§åˆ¶å‘½ä»¤
- * @param cmd ç”¨äºå­˜å‚¨è·å–åˆ°çš„æ§åˆ¶å‘½ä»¤çš„ç»“æ„ä½“æŒ‡é’ˆ
+ * »ñÈ¡×îĞÂµÄÔ¶³Ì¿ØÖÆÃüÁî
+ * @param cmd ÓÃÓÚ´æ´¢»ñÈ¡µ½µÄ¿ØÖÆÃüÁîµÄ½á¹¹ÌåÖ¸Õë
  */
 uint8_t Remote_Control_GetCmd(RemoteControl_Cmd_t *cmd)
 {

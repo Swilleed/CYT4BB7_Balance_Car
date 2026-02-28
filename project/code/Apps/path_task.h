@@ -16,10 +16,10 @@ typedef struct
 
 typedef enum
 {
-    PATH_IDLE,      // ç©ºé—²
-    PATH_RECORDING, // å½•åˆ¶ (RAMæ“ä½œ)
-    PATH_SAVING,    // æŒä¹…åŒ– (Flashæ“ä½œ)
-    PATH_PLAYBACK   // å¤ç°
+    PATH_IDLE,      // ¿ÕÏĞ
+    PATH_RECORDING, // Â¼ÖÆ (RAM²Ù×÷)
+    PATH_SAVING,    // ³Ö¾Ã»¯ (Flash²Ù×÷)
+    PATH_PLAYBACK   // ¸´ÏÖ
 } PathState_enum;
 
 extern PathState_enum path_state;
