@@ -36,6 +36,9 @@
 #include "zf_common_headfile.h"
 #include "balance_task.h"
 #include "remote_control.h"
+#include "app.h"
+#include "AS5600.h"
+#include "FOC.h"
 
 uint32_t FOCcounter = 0;
 uint32_t IMUcounter = 0;
@@ -54,6 +57,7 @@ void my_ipc_callback(uint32 receive_data)
 int main(void)
 {
     RemoteControl_Cmd_t remote_cmd;
+    uint16_t app_tick_1ms_acc = 0;
 
     clock_init(SYSTEM_CLOCK_250M); // 时钟配置及系统初始化<务必保留>
     debug_init();                  // 调试串口信息初始化
@@ -70,22 +74,30 @@ int main(void)
     AS5600_Init(&AS561, 1);
     AS5600_Init(&AS562, 2);
     FOC_init();
+    App_Mode_Init();
 
     while (true)
     {
         Remote_Control_Update(); // 更新远程控制数据，从无线串口读取数据并解析
 
         // 获取最新的远程控制命令
-        if (Remote_Control_GetCmd(&remote_cmd))
+        if ((!App_Mode_IsTeachActive()) && Remote_Control_GetCmd(&remote_cmd))
         {
             Balance_SetMotionCmd(remote_cmd.forward, remote_cmd.turn);
         }
 
         // 每2.5ms执行一次平衡控制循环
-        if (IMUcounter >= 25)
+        if (IMUcounter >= 10)
         {
             Balance_Control_Loop();
             IMUcounter = 0;
+
+            app_tick_1ms_acc++;
+            if (app_tick_1ms_acc >= 20)
+            {
+                app_tick_1ms_acc = 0;
+                App_Mode_Tick20ms();
+            }
         }
 
         // 每0.5ms执行一次FOC控制循环

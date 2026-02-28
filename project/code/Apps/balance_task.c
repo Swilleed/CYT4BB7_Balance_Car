@@ -3,6 +3,60 @@
 #include "balance_task.h"
 #include "KF.h"
 #include "motor.h"
+#include "odometry.h"
+#include <math.h>
+
+#define CHASE_KP_DIST (1.5f)
+#define CHASE_KP_YAW (1.0f)
+#define CHASE_MAX_FORWARD (300.0f)
+#define CHASE_MAX_TURN (120.0f)
+#define CHASE_REACH_DIST (8.0f)
+
+/**
+ * 浮点限幅工具函数
+ * @param value 待限幅值
+ * @param min_v 下限
+ * @param max_v 上限
+ * @return 限幅后的值
+ * 为什么这样写：追逐控制中需要统一限制前进/转向指令，避免指令突变导致姿态环过冲。
+ * 怎么实现：若 value 小于下限返回下限，若大于上限返回上限，否则原样返回。
+ * 怎么调用：仅在本文件内部由 Balance_Chase_Position 调用。
+ * 对应效果：所有追逐控制输出都被约束在安全范围内，运动更平滑可控。
+ */
+static float Balance_Clampf(float value, float min_v, float max_v)
+{
+    if (value < min_v)
+    {
+        return min_v;
+    }
+    if (value > max_v)
+    {
+        return max_v;
+    }
+    return value;
+}
+
+/**
+ * 角度归一化函数（角度制）
+ * @param angle_deg 输入角度（单位：度）
+ * @return 归一化后的角度，范围 [-180, 180] 度
+ * 为什么这样写：目标角与当前角直接相减可能跨越 ±180° 边界，导致转向方向错误。
+ * 怎么实现：循环加减 360°，将结果压到 [-180, 180] 区间。
+ * 怎么调用：仅在本文件内部由 Balance_Chase_Position 计算航向误差时调用。
+ * 对应效果：小车总是按最短角度方向转向，减少原地大幅绕转。
+ */
+static float Balance_NormalizeAngleDeg(float angle_deg)
+{
+    while (angle_deg > 180.0f)
+    {
+        angle_deg -= 360.0f;
+    }
+    while (angle_deg < -180.0f)
+    {
+        angle_deg += 360.0f;
+    }
+    return angle_deg;
+}
 
 float Roll, Yaw, Pitch, X_gyro = 0;
 static float Last_Roll = 0;
@@ -48,7 +102,7 @@ static PID_TypeDef _Angle = {
 };
 
 // 速度环参数
-static float Average_Speed, Delta_Speed, L_Speed, R_Speed;
+extern float L_Speed, R_Speed;
 static PID_TypeDef _Speed = {
 
     .error0 = 0,
@@ -159,6 +213,44 @@ void Balance_SetMotionCmd(int32_t forward_cmd, int32_t turn_cmd)
 void Balance_Remote_SetSpeed(int32_t forward_cmd, int32_t turn_cmd)
 {
     Balance_SetMotionCmd(forward_cmd, turn_cmd);
+}
+
+/**
+ * 追逐目标位置并输出平衡控制速度指令
+ * @param target_x 目标点 X 坐标（与 current_pose.x 同单位）
+ * @param target_y 目标点 Y 坐标（与 current_pose.y 同单位）
+ * @param target_yaw_rad 目标航向角（单位：弧度）
+ * 为什么这样写：把“路径点追逐”统一收敛在 balance 层，避免 path/app 层重复拼速度与转向逻辑。
+ * 怎么实现：
+ * 1) 计算当前位置到目标点的距离误差；
+ * 2) 将目标航向从弧度转成角度，并与当前 Yaw 做归一化误差；
+ * 3) 距离误差经比例环得到前进指令，航向误差经比例环得到转向指令；
+ * 4) 对前进/转向指令做限幅后调用 Balance_SetMotionCmd 下发到原平衡控制链路；
+ * 5) 当距离误差小于阈值时返回 1，表示“到点”。
+ * 怎么调用：由 Path_Playback_Tick 周期调用，每个路径点都会调用一次直到返回到点。
+ * 对应效果：路径复现时小车会持续逼近目标点并修正航向，到点后上层再切到下一个路径点。
+ */
+uint8_t Balance_Chase_Position(float target_x, float target_y, float target_yaw_rad)
+{
+    float dx = target_x - current_pose.x;
+    float dy = target_y - current_pose.y;
+    float dist_error = sqrtf(dx * dx + dy * dy);
+    float target_yaw_deg = target_yaw_rad * 180.0f / 3.14159f;
+    float yaw_error = Balance_NormalizeAngleDeg(target_yaw_deg - Yaw);
+    int32_t forward_cmd = 0;
+    int32_t turn_cmd = 0;
+
+    forward_cmd = (int32_t)Balance_Clampf(dist_error * CHASE_KP_DIST, 0.0f, CHASE_MAX_FORWARD);
+    turn_cmd = (int32_t)Balance_Clampf(yaw_error * CHASE_KP_YAW, -CHASE_MAX_TURN, CHASE_MAX_TURN);
+
+    Balance_SetMotionCmd(forward_cmd, turn_cmd);
+
+    if (dist_error <= CHASE_REACH_DIST)
+    {
+        return 1;
+    }
+
+    return 0;
 }
 
 /**

@@ -12,6 +12,7 @@ typedef struct
 
 #define MAX_PATH_NODES 1000
 #define PATH_FLASH_PAGE 60
+#define PATH_FLASH_MAGIC 0x50415448u
 
 typedef enum
 {
@@ -26,7 +27,7 @@ extern uint16 path_node_count;
 
 void Path_Init(void);
 void Path_Record_Tick(void);
-void Path_Playback_Tick(float *target_v, float *target_yaw);
+void Path_Playback_Tick(void);
 
 void Path_Start_Record(void);
 void Path_Stop_Record(void);
