@@ -1,7 +1,5 @@
-D:\IAR\IAR\ project\Balance_Car\iar\Debug_m7_0\BrowseInfo\code_17896468042025673432.dir\Control.pbi: \
-  D:\IAR\IAR\ project\Balance_Car\code\Control.c \
-  D:\IAR\IAR\ project\Balance_Car\code\PID.h \
-  D:\IAR\IAR\ project\Balance_Car\code\KF.h \
+D:\IAR\IAR\ project\Balance_Car\iar\Debug_m7_0\BrowseInfo\user_8514941877209965082.dir\cm7_0_isr.pbi: \
+  D:\IAR\IAR\ project\Balance_Car\user\cm7_0_isr.c \
   D:\IAR\IAR\ project\Balance_Car\iar\project_config\..\..\..\libraries\zf_common\zf_common_headfile.h \
   D:\IAR\arm\inc\c\stdio.h D:\IAR\arm\inc\c\ycheck.h \
   D:\IAR\arm\inc\c\yvals.h D:\IAR\arm\inc\c\DLib_Defaults.h \
@@ -216,6 +214,4 @@ D:\IAR\IAR\ project\Balance_Car\iar\Debug_m7_0\BrowseInfo\code_17896468042025673
   D:\IAR\IAR\ project\Balance_Car\iar\project_config\..\..\..\libraries\zf_device\zf_device_wifi_uart.h \
   D:\IAR\IAR\ project\Balance_Car\iar\project_config\..\..\..\libraries\zf_device\zf_device_wireless_uart.h \
   D:\IAR\IAR\ project\Balance_Car\iar\project_config\..\..\..\libraries\zf_components\seekfree_assistant.h \
-  D:\IAR\IAR\ project\Balance_Car\iar\project_config\..\..\..\libraries\zf_components\seekfree_assistant_interface.h \
-  D:\IAR\IAR\ project\Balance_Car\code\Flash.h \
-  D:\IAR\IAR\ project\Balance_Car\code\Menu.h
+  D:\IAR\IAR\ project\Balance_Car\iar\project_config\..\..\..\libraries\zf_components\seekfree_assistant_interface.h

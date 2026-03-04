@@ -77,10 +77,11 @@
 #define ANGLE_A                  51.34  
 #define ANGLE_B                  38.65
 
-#define FORWARD                 4.5
-#define TURN                    3.5
+
 uint16 delay_time = 0;
 uint8 led_state = 0;
+
+float FORWARD = 0,TURN = 0;
 
 extern uint8_t FOCcounter;
 extern uint8_t IMUcounter;
@@ -106,9 +107,6 @@ Speed_Data SPEED_out = {
   .Speed = 0,
   .Yaw = 0,
 };
-
-
-
 
 float Roll,Yaw,Pitch,X_gyro = 0,Last_Roll = 0;
 
@@ -158,7 +156,7 @@ int main(void)
     Buzzer_Init();
     Infrared_Init();
     flash_init();
-    
+    Read_Dir_and_Basic(&_Dir,&FORWARD,&TURN);
     SCB_DisableDCache(); 
     ipc_communicate_init(IPC_PORT_1, my_ipc_callback);
     
@@ -442,7 +440,7 @@ int main(void)
             }
             if(Mission == 4){
               if(SPEED_out.Yaw != 200 ){
-                _Speed.Target = SPEED_out.Speed * 0.7;
+                _Speed.Target = SPEED_out.Speed * 0.8;
                 _Yaw.Actual = Yaw;
                 _Yaw.Target = SPEED_out.Yaw;
                 PID_Update_Pos(&_Yaw);
@@ -476,9 +474,10 @@ int main(void)
            _Angle_Speed.Target =  0.1 * _Angle.Out + 0.9 * _Angle_Speed.Target ;
            _Angle_Speed.Actual = X_gyro;
            PID_Update_Pos(&_Angle_Speed);
-           oled_show_float(64,5,Yaw,3,2);
-           oled_show_float(64,6,_Dir.Out,3,2);
-           oled_show_uint(64,7,Save_State,1);
+           
+           //oled_show_float(64,5,_Dir.Kp,3,2);
+           //oled_show_float(64,6,FORWARD,3,2);
+           //oled_show_uint(64,7,Save_State,1);
            
            if(Save_State){} else {
             } 

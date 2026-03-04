@@ -12,6 +12,7 @@ extern PID_TypeDef _Dir;
 extern PID_TypeDef _Pos;
 extern PID_TypeDef _Yaw;
 void adjust_target_angle(float *target, float actual);
+void Read_Dir_and_Basic(PID_TypeDef *PID,float *n1,float * n2);
 void LED_Init(void);
 void LED_ON(void);
 void LED_OFF(void);

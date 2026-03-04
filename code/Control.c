@@ -2,6 +2,11 @@
 #include "KF.h"
 #include "zf_common_headfile.h"
 
+#include "Flash.h"
+#include "Menu.h"
+extern Menu menu[6];
+extern float FORWARD,TURN;
+
 KalmanFilter1D_Speed X_GYRO = {
     .Speed_Hat = 0.0f,  
     .P = 1.0f,          
@@ -207,4 +212,26 @@ void Device_Scanner(void)
 void Device_Set(void)
 {
   Device_count = 0;
+}
+
+
+void Read_Dir_and_Basic(PID_TypeDef *PID,float *n1,float * n2)
+{
+  uint32_t temp1[3],temp2[2];
+  
+  flash_read_page(0, 90, temp1, 3);
+  flash_read_page(0, 91, temp2, 2);
+  
+  menu[3].item[0].value = temp1[0] / 100.0;
+  menu[3].item[1].value = temp1[1] / 100.0;
+  menu[3].item[2].value = temp1[2] / 100.0;
+  menu[2].item[0].value = temp2[0] / 100.0;
+  menu[2].item[1].value = temp2[1] / 100.0;
+  
+  PID->Kp = temp1[0] / 100.0;
+  PID->Ki = temp1[1] / 100.0;
+  PID->Kd = temp1[2] / 100.0;
+  
+  *n1 = temp2[0] / 100.0;
+  *n2 = temp2[1] / 100.0;
 }

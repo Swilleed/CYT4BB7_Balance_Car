@@ -3,6 +3,7 @@
 #include "Menu.h"
 #include "zf_device_oled.h"
 #include "zf_device_key.h"
+#include "zf_driver_flash.h"
 Menu menu[6];
 uint8_t Mission;
 uint8_t Save_State = 0;
@@ -26,10 +27,24 @@ void E(void){
   if(!Mission){Mission = 5;}
   else {Mission = 0;}
 }
-void Flash(void){
+void Flash1(void){
+  if(flash_check(0, 91)){flash_erase_page(0, 91);}
+  uint32_t temp[8];
+  temp[0] = (uint32_t)(menu[2].item[0].value * 100);
+  temp[4] = (uint32_t)(menu[2].item[1].value * 100);
+    
+  flash_write_page(0,91,temp,8);  
+}
+void Flash2(void){
+  if(flash_check(0, 90)){flash_erase_page(0, 90);}
+  uint32_t temp[12];
+  temp[0] = (uint32_t)(menu[3].item[0].value * 100);
+  temp[4] = (uint32_t)(menu[3].item[1].value * 100);
+  temp[8] = (uint32_t)(menu[3].item[2].value * 100);
+  flash_write_page(0,90,temp,12);  
+  
   
 }
-
 void Save(void){
    Save_State = !Save_State;
 }
@@ -73,9 +88,9 @@ void Menu_Init(void)
     menu[0].item[5].function = E;
     
     strcpy(menu[1].title, "PID");
-    menu[1].count = 3;
+    menu[1].count = 2;
     menu[1].parIndex = 0;
-    strcpy(menu[1].item[0].name, "STAND");
+    strcpy(menu[1].item[0].name, "BASIC");
     menu[1].item[0].type = submenu;
     menu[1].item[0].value = 0;
     menu[1].item[0].subIndex = 2;
@@ -85,35 +100,25 @@ void Menu_Init(void)
     menu[1].item[1].value = 0;
     menu[1].item[1].subIndex = 3;
     menu[1].item[1].function = NULL;
-    strcpy(menu[1].item[2].name, "POS");
-    menu[1].item[2].type = submenu;
-    menu[1].item[2].value = 0;
-    menu[1].item[2].subIndex = 4;
-    menu[1].item[2].function = NULL;
     
-    strcpy(menu[2].title, "STAND");
-    menu[2].count = 4;
+    strcpy(menu[2].title, "BASIC");
+    menu[2].count = 3;
     menu[2].parIndex = 1;
-    strcpy(menu[2].item[0].name, "P");
+    strcpy(menu[2].item[0].name, "Forward");
     menu[2].item[0].type = dec;
     menu[2].item[0].value = 0;
     menu[2].item[0].subIndex = -1;
     menu[2].item[0].function = NULL;
-    strcpy(menu[2].item[1].name, "I");
+    strcpy(menu[2].item[1].name, "Turn");
     menu[2].item[1].type = dec;
     menu[2].item[1].value = 0;
     menu[2].item[1].subIndex = -1;
     menu[2].item[1].function = NULL;
-    strcpy(menu[2].item[2].name, "D");
-    menu[2].item[2].type = dec;
+    strcpy(menu[2].item[2].name, "OK");
+    menu[2].item[2].type = function;
     menu[2].item[2].value = 0;
     menu[2].item[2].subIndex = -1;
-    menu[2].item[2].function = NULL;
-    strcpy(menu[2].item[3].name, "OK");
-    menu[2].item[3].type = function;
-    menu[2].item[3].value = 0;
-    menu[2].item[3].subIndex = -1;
-    menu[2].item[3].function = Flash;
+    menu[2].item[2].function = Flash1;
     
     strcpy(menu[3].title, "DIR");
     menu[3].count = 4;
@@ -137,31 +142,8 @@ void Menu_Init(void)
     menu[3].item[3].type = function;
     menu[3].item[3].value = 0;
     menu[3].item[3].subIndex = -1;
-    menu[3].item[3].function = Flash;
+    menu[3].item[3].function = Flash2;
     
-    strcpy(menu[4].title, "STAND");
-    menu[4].count = 4;
-    menu[4].parIndex = 1;
-    strcpy(menu[4].item[0].name, "P");
-    menu[4].item[0].type = dec;
-    menu[4].item[0].value = 0;
-    menu[4].item[0].subIndex = -1;
-    menu[4].item[0].function = NULL;
-    strcpy(menu[4].item[1].name, "I");
-    menu[4].item[1].type = dec;
-    menu[4].item[1].value = 0;
-    menu[4].item[1].subIndex = -1;
-    menu[4].item[1].function = NULL;
-    strcpy(menu[4].item[2].name, "D");
-    menu[4].item[2].type = dec;
-    menu[4].item[2].value = 0;
-    menu[4].item[2].subIndex = -1;
-    menu[4].item[2].function = NULL;
-    strcpy(menu[4].item[3].name, "OK");
-    menu[4].item[3].type = function;
-    menu[4].item[3].value = 0;
-    menu[4].item[3].subIndex = -1;
-    menu[4].item[3].function = Flash;
     
     strcpy(menu[5].title, "D");
     menu[5].count = 2;
@@ -184,6 +166,7 @@ void OLED_ShowMenu(void)
 {   
         
         oled_show_int(108,0,Mission,1);
+        if(Save_State){oled_show_string(90,1,"Saving");}
 	oled_show_string(0,0,menu[menuIndex].title);
 	for(int16_t i = 0;i < menu[menuIndex].count;i++)
 	{
@@ -194,7 +177,7 @@ void OLED_ShowMenu(void)
 
             if(menu[menuIndex].item[i].type == dec )
             {
-		oled_show_float(72,(i + 1),menu[menuIndex].item[i].value,1,3);
+		oled_show_float(66,(i + 1),menu[menuIndex].item[i].value,1,2);
             }
 	}
         
@@ -212,7 +195,7 @@ void up(void)
             itemIndex = menu[menuIndex].count-1;
           }
         } else {
-          menu[menuIndex].item[itemIndex].value += 0.005;
+          menu[menuIndex].item[itemIndex].value += 0.01;
         }
 }
 
@@ -226,7 +209,7 @@ void down(void)
             itemIndex = 0;
           }
         } else {
-          menu[menuIndex].item[itemIndex].value -= 0.005;
+          menu[menuIndex].item[itemIndex].value -= 0.01;
         }
 	
 }

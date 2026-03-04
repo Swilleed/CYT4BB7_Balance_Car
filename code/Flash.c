@@ -3,11 +3,15 @@
 #include <string.h>
 #include "Flash.h"
 
+
+
 uint16_t flashcount1 = 0;
 uint8_t flash_page_index = 0;
 uint16_t flashcount2 = 0;
 uint8_t read_page_index = 0;
 uint8_t start_flag;
+
+
 
 void flash_save(void)
 {
@@ -55,12 +59,15 @@ void buffer_read_flash(Speed_Data *Data){
     flash_read_page_to_buffer(0,read_page_index,500);
     start_flag ++;
   }
-  
-  Data->Speed = flash_union_buffer[flashcount2].float_type;
-  Data->Yaw = flash_union_buffer[flashcount2 + 250].float_type;
+  if(flash_union_buffer[flashcount2 + 250].float_type != 200){
+    
+    Data->Speed = flash_union_buffer[flashcount2].float_type;
+    Data->Yaw = flash_union_buffer[flashcount2 + 250].float_type;
+  }
   flashcount2 ++;
   if(flashcount2 >= 250){
     flashcount2 = 0;
     read_page_index ++;
   }
 }
+
